@@ -3,20 +3,22 @@
         "PresetID": 0,
         "Columns":
         [
-            ["ID", "bigint"],
-            ["PartID", "bigint"],
-            ["Cavity", "int"],
-            ["L_Result", "int"],
-            ["DateTime", "DateTime"]
+            ["id", "bigint"],
+            ["first_name", "bigint"],
+            ["last_name", "int"],
+            ["email", "int"],
+            ["Datetime", "DateTime"]
         ] 
     },
     {
         "PresetID": 1,
         "Columns":
         [
-            ["ID", "bigint"],
-            ["PartID", "bigint"],
-            ["DateTime", "DateTime"]
+            ["id", "bigint"],
+            ["first_name", "bigint"],
+            ["last_name", "int"],
+            ["email", "int"],
+            ["Datetime", "DateTime"]
         ] 
     }
 ]

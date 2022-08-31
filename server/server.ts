@@ -183,12 +183,26 @@ function GetBackgroundColor(_dateTime: Date): string {
     if( timeToCalculate > miliseconds){
         hexcode += "FF0000"
     } else {
+        
         if (timeToCalculate > miliseconds/2){
+            //red
             let color = Math.floor(255-(((timeToCalculate-(miliseconds/2))/(miliseconds/2))*255))
-            hexcode += "ff"+color.toString(16)+"00";
+            let hexpart = color.toString(16);
+            if(hexpart.length == 1){
+                hexpart = "0"+hexpart;
+            }
+            
+            hexcode += "ff"+hexpart+"00";
+
         } else {
+            //green
             let color = Math.floor((timeToCalculate/(miliseconds/2))*255)
-            hexcode += color.toString(16)+"ff00";
+            let hexpart = color.toString(16);
+            if(hexpart.length == 1){
+                hexpart = "0"+hexpart;
+            }
+            
+            hexcode += hexpart+"ff00";
         }
     }
     return hexcode;

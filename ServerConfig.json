@@ -1,5 +1,5 @@
 {
-    "MaxTimeSinceUpdateInMin": 20,
+    "MaxTimeSinceUpdateInMin": 200000,
     "DataFetchTimeInMin": 1,
     "Port": 8100
 }

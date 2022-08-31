@@ -165,20 +165,30 @@ function FormatDateTime(_dateTime) {
 function GetBackgroundColor(_dateTime) {
     let currentTime = Date.now();
     let timeToCalculate = currentTime - _dateTime.getTime();
-    //let timeToCalculate = currentTime - (currentTime-145000);
     let miliseconds = ServerConfig_json_1.default.MaxTimeSinceUpdateInMin * 60 * 1000;
+    // Generates a Hexcode based to Time (From 00FF00 to FF0000)[Green to Red]
     let hexcode = "#";
     if (timeToCalculate > miliseconds) {
         hexcode += "FF0000";
     }
     else {
         if (timeToCalculate > miliseconds / 2) {
+            //red
             let color = Math.floor(255 - (((timeToCalculate - (miliseconds / 2)) / (miliseconds / 2)) * 255));
-            hexcode += "ff" + color.toString(16) + "00";
+            let hexpart = color.toString(16);
+            if (hexpart.length == 1) {
+                hexpart = "0" + hexpart;
+            }
+            hexcode += "ff" + hexpart + "00";
         }
         else {
+            //green
             let color = Math.floor((timeToCalculate / (miliseconds / 2)) * 255);
-            hexcode += color.toString(16) + "ff00";
+            let hexpart = color.toString(16);
+            if (hexpart.length == 1) {
+                hexpart = "0" + hexpart;
+            }
+            hexcode += hexpart + "ff00";
         }
     }
     return hexcode;

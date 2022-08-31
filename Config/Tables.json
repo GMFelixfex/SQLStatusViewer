@@ -1,36 +1,52 @@
 [
     {
-        "ServerName": "SQLTESTSERVER",
-        "DatabaseName": "neuxml",
-        "Tablename": "BaseXML",
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing2",
+        "Tablename": "Test_MOCK_DATA2",
         "TableShema": "dbo",
         "ColumnPresetID": 0,
-        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [neuxml].[dbo].[BaseXML])"
+        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [testing2].[dbo].[Test_MOCK_DATA2])"
 
     },
     {
-        "ServerName": "SQLTESTSERVER",
-        "DatabaseName": "neuxml",
-        "Tablename": "BaseXML",
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing1",
+        "Tablename": "Test_MOCK_DATA",
         "TableShema": "dbo",
         "ColumnPresetID": 1,
-        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [neuxml].[dbo].[BaseXML])"
+        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [testing1].[dbo].[Test_MOCK_DATA])"
     },
     {
-        "ServerName": "SQLTESTSERVER",
-        "DatabaseName": "neuxml",
-        "Tablename": "BaseXML",
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing2",
+        "Tablename": "Test_MOCK_DATA",
         "TableShema": "dbo",
         "ColumnPresetID": 1,
-        "SelectionCondition": "WHERE ID = (SELECT MIN(ID) from [neuxml].[dbo].[BaseXML])"
+        "SelectionCondition": "WHERE ID = (SELECT MIN(ID) from [testing2].[dbo].[Test_MOCK_DATA])"
     },
     {
-        "ServerName": "SQLTESTSERVER",
-        "DatabaseName": "newXMLTest",
-        "Tablename": "BaseXML",
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing2",
+        "Tablename": "Test_MOCK_DATA2",
         "TableShema": "dbo",
         "ColumnPresetID": 1,
         "SelectionCondition": "WHERE ID <= 10"
+    },
+    {
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing1",
+        "Tablename": "Test_MOCK_DATA",
+        "TableShema": "dbo",
+        "ColumnPresetID": 0,
+        "SelectionCondition": "WHERE ID = (SELECT MIN(ID) from [testing1].[dbo].[Test_MOCK_DATA])"
+    },
+    {
+        "ServerName": "SQLEXPRESS",
+        "DatabaseName": "testing1",
+        "Tablename": "Test_MOCK_DATA",
+        "TableShema": "dbo",
+        "ColumnPresetID": 0,
+        "SelectionCondition": "WHERE ID >= 990"
     }
 ]
 
