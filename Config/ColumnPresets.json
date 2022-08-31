@@ -4,9 +4,9 @@
         "Columns":
         [
             ["id", "bigint"],
-            ["first_name", "bigint"],
-            ["last_name", "int"],
-            ["email", "int"],
+            ["first_name", "varchar"],
+            ["last_name", "varchar"],
+            ["email", "varchar"],
             ["Datetime", "DateTime"]
         ] 
     },
@@ -15,9 +15,7 @@
         "Columns":
         [
             ["id", "bigint"],
-            ["first_name", "bigint"],
-            ["last_name", "int"],
-            ["email", "int"],
+            ["email", "varchar"],
             ["Datetime", "DateTime"]
         ] 
     }

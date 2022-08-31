@@ -81,12 +81,12 @@ function handleRequest(_request, _response) {
 }
 // Function the get All data form the Databse-Tables
 function GetAllData() {
-    let preUnsortedTableInfo = [];
-    let promiseArrays = [];
+    let preUnformattedData = [];
+    let preSortedTableInfo = [];
     //Loops through all presets (All Resulting Tables)
     for (let i = 0; i < ColumnPresets_json_1.default.length; i++) {
+        let unforamttedTable = [];
         let partialTableInfo = [];
-        let partialPromiseArray = [];
         //Loops through all SQL-Tables
         for (let j = 0; j < Tables_json_1.default.length; j++) {
             if (Tables_json_1.default[j].ColumnPresetID == i) {
@@ -101,42 +101,23 @@ function GetAllData() {
                 }
                 query += " FROM " + Tables_json_1.default[j].DatabaseName + "." + Tables_json_1.default[j].TableShema + "." + Tables_json_1.default[j].Tablename + " " + Tables_json_1.default[j].SelectionCondition;
                 //Executes Query
-                partialPromiseArray.push(SQLServers[ServerIndex].ExecuteSQL(query));
-                partialTableInfo.push(Tables_json_1.default[j]);
-                /*
+                var sqlReturnData = SQLServers[ServerIndex].ExecuteSQL(query);
                 //Waits for the Result and pushes it into the arrays
-                sqlReturnData.then(function (sqlReturnData: any){
+                sqlReturnData.then(function (sqlReturnData) {
                     // Loops through all returned rows
                     for (let l = 0; l < sqlReturnData.recordset.length; l++) {
                         unforamttedTable.push(sqlReturnData.recordset[l]);
-                        partialTableInfo.push(tablesjson[j])
+                        partialTableInfo.push(Tables_json_1.default[j]);
                     }
-                    
-                })*/
+                });
             }
         }
-        promiseArrays.push(partialPromiseArray);
-        preUnsortedTableInfo.push(partialTableInfo);
-    }
-    let preSortedTableData = [];
-    let preSortedTableInfo = [];
-    for (let i = 0; i < promiseArrays.length; i++) {
-        let allDataRows = [];
-        let allInfoRows = [];
-        Promise.all(promiseArrays[i]).then((values) => {
-            console.log(values);
-            for (let j = 0; j < values.length; j++) {
-                for (let l = 0; l < values[j].recordset.length; l++) {
-                    allDataRows.push(values[j].recordset[l]);
-                    allInfoRows.push(preUnsortedTableInfo[i][j]);
-                }
-            }
-        });
-        preSortedTableData.push(allDataRows);
-        preSortedTableInfo.push(allInfoRows);
+        //Pushes unformatted table into the final array
+        preUnformattedData.push(unforamttedTable);
+        preSortedTableInfo.push(partialTableInfo);
     }
     // Only changes the Array at the end of the function to guarantee to always have a full Array
-    unformattedData = preSortedTableData;
+    unformattedData = preUnformattedData;
     SortedTableInfo = preSortedTableInfo;
 }
 //Formats the Data into HTML-Table-Strings 

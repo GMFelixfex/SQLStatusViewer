@@ -4,7 +4,6 @@ import tablesjson from '../Config/Tables.json'
 import SQLServersJson from '../Config/DatabaseServer.json'
 import ColPresets from '../Config/ColumnPresets.json'
 import ServerConfig from '../ServerConfig.json'
-import { Console } from 'console'
 
 // Sets Port if it was not already set
 let port: number = ServerConfig.Port;
@@ -69,13 +68,15 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
 
 // Function the get All data form the Databse-Tables
 function GetAllData():  any{
-    let preUnsortedTableInfo: any = [];
-    let promiseArrays: any = [];
+
+    let preUnformattedData: any = []; 
+    let preSortedTableInfo: any = [];
+
     //Loops through all presets (All Resulting Tables)
     for (let i = 0; i < ColPresets.length; i++) {
-        
-        let partialTableInfo: any = [];
-        let partialPromiseArray: Promise<any>[] = []
+        let unforamttedTable: any = []; 
+        let partialTableInfo: any = []
+
         //Loops through all SQL-Tables
         for (let j = 0; j < tablesjson.length; j++) {
             if(tablesjson[j].ColumnPresetID == i){
@@ -93,9 +94,8 @@ function GetAllData():  any{
                 query += " FROM "+ tablesjson[j].DatabaseName + "."+tablesjson[j].TableShema+"."+tablesjson[j].Tablename + " "+tablesjson[j].SelectionCondition;
                 
                 //Executes Query
-                partialPromiseArray.push(SQLServers[ServerIndex].ExecuteSQL(query));
-                partialTableInfo.push(tablesjson[j])
-                /*
+                var sqlReturnData: Promise<any> = SQLServers[ServerIndex].ExecuteSQL(query);
+                
                 //Waits for the Result and pushes it into the arrays
                 sqlReturnData.then(function (sqlReturnData: any){
                     // Loops through all returned rows
@@ -104,38 +104,20 @@ function GetAllData():  any{
                         partialTableInfo.push(tablesjson[j])
                     }
                     
-                })*/
+                })
+
             }
         }
-        promiseArrays.push(partialPromiseArray);
-        preUnsortedTableInfo.push(partialTableInfo);
-    }
 
+        //Pushes unformatted table into the final array
+        preUnformattedData.push(unforamttedTable);
+        preSortedTableInfo.push(partialTableInfo);
         
-    let preSortedTableData = [];
-    let preSortedTableInfo = [];
-
-
-    for (let i = 0; i < promiseArrays.length; i++) {
-        let allDataRows: any = [];
-        let allInfoRows: any = [];
-        Promise.all(promiseArrays[i]).then((values) =>{
-            console.log(values);
-            for (let j = 0; j < values.length; j++) {
-                for (let l = 0; l < values[j].recordset.length; l++) {
-                    allDataRows.push(values[j].recordset[l])
-                    allInfoRows.push(preUnsortedTableInfo[i][j])
-                    
-                }
-            }
-
-        })
-        preSortedTableData.push(allDataRows);
-        preSortedTableInfo.push(allInfoRows);
+        
     }
 
     // Only changes the Array at the end of the function to guarantee to always have a full Array
-    unformattedData = preSortedTableData;
+    unformattedData = preUnformattedData;
     SortedTableInfo = preSortedTableInfo;
 }
 

@@ -8,7 +8,7 @@ div {
     background-position: 10px 10px;
     background-size: 20px 20px;
     background-repeat: no-repeat;
-    width: 100%;
+    width: 90%;
     font-size: 16px;
     padding: 12px 20px 12px 40px;
     border: 1px solid #ddd;
@@ -24,6 +24,7 @@ td, th {
     border: 1px solid #000000;
     text-align: left;
     width: 100px;
+    overflow: hidden;
 }
 
 table {
@@ -32,6 +33,7 @@ table {
     border: 1px solid #ddd;
     font-size: 18px;
     margin-bottom: 5px;
+    width: 90%;
 }
 
 tr:nth-child(even) {
