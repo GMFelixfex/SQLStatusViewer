@@ -1,0 +1,36 @@
+[
+    {
+        "ServerName": "SQLTESTSERVER",
+        "DatabaseName": "neuxml",
+        "Tablename": "BaseXML",
+        "TableShema": "dbo",
+        "ColumnPresetID": 0,
+        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [neuxml].[dbo].[BaseXML])"
+
+    },
+    {
+        "ServerName": "SQLTESTSERVER",
+        "DatabaseName": "neuxml",
+        "Tablename": "BaseXML",
+        "TableShema": "dbo",
+        "ColumnPresetID": 1,
+        "SelectionCondition": "WHERE ID = (SELECT MAX(ID) from [neuxml].[dbo].[BaseXML])"
+    },
+    {
+        "ServerName": "SQLTESTSERVER",
+        "DatabaseName": "neuxml",
+        "Tablename": "BaseXML",
+        "TableShema": "dbo",
+        "ColumnPresetID": 1,
+        "SelectionCondition": "WHERE ID = (SELECT MIN(ID) from [neuxml].[dbo].[BaseXML])"
+    },
+    {
+        "ServerName": "SQLTESTSERVER",
+        "DatabaseName": "newXMLTest",
+        "Tablename": "BaseXML",
+        "TableShema": "dbo",
+        "ColumnPresetID": 1,
+        "SelectionCondition": "WHERE ID <= 10"
+    }
+]
+

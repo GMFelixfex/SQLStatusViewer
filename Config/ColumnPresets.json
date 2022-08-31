@@ -1,0 +1,22 @@
+[
+    {
+        "PresetID": 0,
+        "Columns":
+        [
+            ["ID", "bigint"],
+            ["PartID", "bigint"],
+            ["Cavity", "int"],
+            ["L_Result", "int"],
+            ["DateTime", "DateTime"]
+        ] 
+    },
+    {
+        "PresetID": 1,
+        "Columns":
+        [
+            ["ID", "bigint"],
+            ["PartID", "bigint"],
+            ["DateTime", "DateTime"]
+        ] 
+    }
+]
