@@ -83,11 +83,11 @@ function GetAllData():  any{
                 if(ServerIndex != undefined){
                     //Creates Query
                     let query = "SELECT ";
-                    for (let k = 0; k < HtmlPresetViews[i].Columns.length; k++) {
+                    for (let k = 0; k < HtmlPresetViews[i].ShowColumns.length; k++) {
                         if(k != 0){
                             query += ", "
                         }
-                        query += HtmlPresetViews[i].Columns[k][0];
+                        query += HtmlPresetViews[i].ShowColumns[k][0];
                         
                     }
                     query += " FROM ["+ tablesjson[j].DatabaseName + "].["+tablesjson[j].TableSchema+"].["+tablesjson[j].TableName + "] "+tablesjson[j].SelectCondition;
@@ -151,7 +151,7 @@ function GetFromattedData(): string{
 
         // Tables header with a Unique Class to maybe at desings later
         let tableHeader =  "<table class='preset_"+i+"'><tr class='header'><th>TableName</th>"
-        let keys = HtmlPresetViews[i].Columns;
+        let keys = HtmlPresetViews[i].ShowColumns;
         for (let j = 0; j < keys.length; j++) {
             tableHeader += "<th class="+keys[j][1]+">" + keys[j][0] + "</th>"
         }

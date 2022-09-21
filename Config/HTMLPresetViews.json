@@ -1,7 +1,7 @@
 [
     {
         "HtmlPresetId": 0,
-        "Columns":
+        "ShowColumns":
         [
             ["id", "bigint"],
             ["first_name", "varchar"],
@@ -12,7 +12,7 @@
     },
     {
         "HtmlPresetId": 1,
-        "Columns":
+        "ShowColumns":
         [
             ["id", "bigint"],
             ["email", "varchar"],
