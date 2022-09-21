@@ -1,8 +1,8 @@
 import * as Http from 'http'
 import * as DatabaseConnector from './DatabaseConnector'
-import tablesjson from '../Config/Tables.json'
+import tablesjson from '../Config/DatabaseTables.json'
 import SQLServersJson from '../Config/DatabaseServer.json'
-import HTMLPresetViews from '../Config/HTMLPresetViews.json'
+import HtmlPresetViews from '../Config/HtmlPresetViews.json'
 import ServerConfig from '../ServerConfig.json'
 
 // Sets Port if it was not already set
@@ -15,7 +15,7 @@ if (!port || port == 0) {
 var SQLServers: DatabaseConnector.ServerConnection[] = [];
 var SQLServerNames: string[] = []
 for (let i = 0; i < SQLServersJson.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].SQLServerIP,SQLServersJson[i].SQLServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
+    SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].IPAddress,SQLServersJson[i].SQLServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
     SQLServerNames.push(SQLServersJson[i].SQLServerName);
 }
 
@@ -72,22 +72,22 @@ function GetAllData():  any{
     let preUnsortedTableInfo: any = [];
     let promiseArrays: any = [];
     //Loops through all presets (All Resulting Tables)
-    for (let i = 0; i < HTMLPresetViews.length; i++) {
+    for (let i = 0; i < HtmlPresetViews.length; i++) {
         
         let partialTableInfo: any = [];
         let partialPromiseArray: Promise<any>[] = []
         //Loops through all SQL-Tables
         for (let j = 0; j < tablesjson.length; j++) {
-            if(tablesjson[j].HTMLPresetViewId == i){
+            if(tablesjson[j].HtmlPresetId == i){
                 let ServerIndex = SQLServerNames.indexOf(tablesjson[j].ServerName);
                 if(ServerIndex != undefined){
                     //Creates Query
                     let query = "SELECT ";
-                    for (let k = 0; k < HTMLPresetViews[i].Columns.length; k++) {
+                    for (let k = 0; k < HtmlPresetViews[i].Columns.length; k++) {
                         if(k != 0){
                             query += ", "
                         }
-                        query += HTMLPresetViews[i].Columns[k][0];
+                        query += HtmlPresetViews[i].Columns[k][0];
                         
                     }
                     query += " FROM ["+ tablesjson[j].DatabaseName + "].["+tablesjson[j].TableSchema+"].["+tablesjson[j].TableName + "] "+tablesjson[j].SelectCondition;
@@ -150,8 +150,8 @@ function GetFromattedData(): string{
     for (let i = 0; i < unformattedData.length; i++) {
 
         // Tables header with a Unique Class to maybe at desings later
-        let tableHeader =  "<table class='preset_"+i+"'><tr class='header'><th>Tablename</th>"
-        let keys = HTMLPresetViews[i].Columns;
+        let tableHeader =  "<table class='preset_"+i+"'><tr class='header'><th>TableName</th>"
+        let keys = HtmlPresetViews[i].Columns;
         for (let j = 0; j < keys.length; j++) {
             tableHeader += "<th class="+keys[j][1]+">" + keys[j][0] + "</th>"
         }

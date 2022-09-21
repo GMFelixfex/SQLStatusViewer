@@ -28,9 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Http = __importStar(require("http"));
 const DatabaseConnector = __importStar(require("./DatabaseConnector"));
-const Tables_json_1 = __importDefault(require("../Config/Tables.json"));
+const DatabaseTables_json_1 = __importDefault(require("../Config/DatabaseTables.json"));
 const DatabaseServer_json_1 = __importDefault(require("../Config/DatabaseServer.json"));
-const HTMLPresetViews_json_1 = __importDefault(require("../Config/HTMLPresetViews.json"));
+const HtmlPresetViews_json_1 = __importDefault(require("../Config/HtmlPresetViews.json"));
 const ServerConfig_json_1 = __importDefault(require("../ServerConfig.json"));
 // Sets Port if it was not already set
 let port = ServerConfig_json_1.default.Port;
@@ -41,7 +41,7 @@ if (!port || port == 0) {
 var SQLServers = [];
 var SQLServerNames = [];
 for (let i = 0; i < DatabaseServer_json_1.default.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServer_json_1.default[i].SQLServerIP, DatabaseServer_json_1.default[i].SQLServerName, DatabaseServer_json_1.default[i].Port, DatabaseServer_json_1.default[i].Username, DatabaseServer_json_1.default[i].Password));
+    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServer_json_1.default[i].IPAddress, DatabaseServer_json_1.default[i].SQLServerName, DatabaseServer_json_1.default[i].Port, DatabaseServer_json_1.default[i].Username, DatabaseServer_json_1.default[i].Password));
     SQLServerNames.push(DatabaseServer_json_1.default[i].SQLServerName);
 }
 var unformattedData = [];
@@ -84,26 +84,26 @@ function GetAllData() {
     let preUnsortedTableInfo = [];
     let promiseArrays = [];
     //Loops through all presets (All Resulting Tables)
-    for (let i = 0; i < HTMLPresetViews_json_1.default.length; i++) {
+    for (let i = 0; i < HtmlPresetViews_json_1.default.length; i++) {
         let partialTableInfo = [];
         let partialPromiseArray = [];
         //Loops through all SQL-Tables
-        for (let j = 0; j < Tables_json_1.default.length; j++) {
-            if (Tables_json_1.default[j].HTMLPresetViewId == i) {
-                let ServerIndex = SQLServerNames.indexOf(Tables_json_1.default[j].ServerName);
+        for (let j = 0; j < DatabaseTables_json_1.default.length; j++) {
+            if (DatabaseTables_json_1.default[j].HtmlPresetId == i) {
+                let ServerIndex = SQLServerNames.indexOf(DatabaseTables_json_1.default[j].ServerName);
                 if (ServerIndex != undefined) {
                     //Creates Query
                     let query = "SELECT ";
-                    for (let k = 0; k < HTMLPresetViews_json_1.default[i].Columns.length; k++) {
+                    for (let k = 0; k < HtmlPresetViews_json_1.default[i].Columns.length; k++) {
                         if (k != 0) {
                             query += ", ";
                         }
-                        query += HTMLPresetViews_json_1.default[i].Columns[k][0];
+                        query += HtmlPresetViews_json_1.default[i].Columns[k][0];
                     }
-                    query += " FROM [" + Tables_json_1.default[j].DatabaseName + "].[" + Tables_json_1.default[j].TableSchema + "].[" + Tables_json_1.default[j].TableName + "] " + Tables_json_1.default[j].SelectCondition;
+                    query += " FROM [" + DatabaseTables_json_1.default[j].DatabaseName + "].[" + DatabaseTables_json_1.default[j].TableSchema + "].[" + DatabaseTables_json_1.default[j].TableName + "] " + DatabaseTables_json_1.default[j].SelectCondition;
                     //Executes Query
                     partialPromiseArray.push(SQLServers[ServerIndex].ExecuteSQL(query));
-                    partialTableInfo.push(Tables_json_1.default[j]);
+                    partialTableInfo.push(DatabaseTables_json_1.default[j]);
                     /*
                     //Waits for the Result and pushes it into the arrays
                     sqlReturnData.then(function (sqlReturnData: any){
@@ -148,7 +148,7 @@ function GetFromattedData() {
     for (let i = 0; i < unformattedData.length; i++) {
         // Tables header with a Unique Class to maybe at desings later
         let tableHeader = "<table class='preset_" + i + "'><tr class='header'><th>Tablename</th>";
-        let keys = HTMLPresetViews_json_1.default[i].Columns;
+        let keys = HtmlPresetViews_json_1.default[i].Columns;
         for (let j = 0; j < keys.length; j++) {
             tableHeader += "<th class=" + keys[j][1] + ">" + keys[j][0] + "</th>";
         }

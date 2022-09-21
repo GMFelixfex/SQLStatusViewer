@@ -1,6 +1,6 @@
 [
     {
-        "PresetID": 0,
+        "HtmlPresetId": 0,
         "Columns":
         [
             ["id", "bigint"],
@@ -11,7 +11,7 @@
         ] 
     },
     {
-        "PresetID": 1,
+        "HtmlPresetId": 1,
         "Columns":
         [
             ["id", "bigint"],

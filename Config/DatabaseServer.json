@@ -1,8 +1,15 @@
 [
     {
-        "SQLServerIP": "localhost",
+        "IPAddress": "localhost",
         "SQLServerName": "SQLEXPRESS",
         "Port": 1434,
+        "Username": "TestAdmin",
+        "Password": "134134134"
+    },
+    {
+        "IPAddress": "localhost",
+        "SQLServerName": "SQLTESTSERVER",
+        "Port": 1433,
         "Username": "TestAdmin",
         "Password": "134134134"
     }
