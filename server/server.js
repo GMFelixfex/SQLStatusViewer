@@ -28,9 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Http = __importStar(require("http"));
 const DatabaseConnector = __importStar(require("./DatabaseConnector"));
-const DatabaseTables_json_1 = __importDefault(require("../Config/DatabaseTables.json"));
-const DatabaseServers_json_1 = __importDefault(require("../Config/DatabaseServers.json"));
-const HtmlPresetViews_json_1 = __importDefault(require("../Config/HtmlPresetViews.json"));
+const DatabaseTables_json_1 = __importDefault(require("../config/DatabaseTables.json"));
+const DatabaseServers_json_1 = __importDefault(require("../config/DatabaseServers.json"));
+const HtmlPresetViews_json_1 = __importDefault(require("../config/HtmlPresetViews.json"));
 const ServerConfig_json_1 = __importDefault(require("../ServerConfig.json"));
 // Sets Port if it was not already set
 let port = ServerConfig_json_1.default.Port;
@@ -41,8 +41,8 @@ if (!port || port == 0) {
 var SQLServers = [];
 var SQLServerNames = [];
 for (let i = 0; i < DatabaseServers_json_1.default.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServers_json_1.default[i].IPAddress, DatabaseServers_json_1.default[i].SQLServerName, DatabaseServers_json_1.default[i].Port, DatabaseServers_json_1.default[i].Username, DatabaseServers_json_1.default[i].Password));
-    SQLServerNames.push(DatabaseServers_json_1.default[i].SQLServerName);
+    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServers_json_1.default[i].IPAddress, DatabaseServers_json_1.default[i].ServerName, DatabaseServers_json_1.default[i].Port, DatabaseServers_json_1.default[i].Username, DatabaseServers_json_1.default[i].Password));
+    SQLServerNames.push(DatabaseServers_json_1.default[i].ServerName);
 }
 var unformattedData = [];
 var SortedTableInfo = [];

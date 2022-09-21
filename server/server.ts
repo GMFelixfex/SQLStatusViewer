@@ -1,8 +1,8 @@
 import * as Http from 'http'
 import * as DatabaseConnector from './DatabaseConnector'
-import tablesjson from '../Config/DatabaseTables.json'
-import SQLServersJson from '../Config/DatabaseServers.json'
-import HtmlPresetViews from '../Config/HtmlPresetViews.json'
+import tablesjson from '../config/DatabaseTables.json'
+import SQLServersJson from '../config/DatabaseServers.json'
+import HtmlPresetViews from '../config/HtmlPresetViews.json'
 import ServerConfig from '../ServerConfig.json'
 
 // Sets Port if it was not already set
@@ -15,8 +15,8 @@ if (!port || port == 0) {
 var SQLServers: DatabaseConnector.ServerConnection[] = [];
 var SQLServerNames: string[] = []
 for (let i = 0; i < SQLServersJson.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].IPAddress,SQLServersJson[i].SQLServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
-    SQLServerNames.push(SQLServersJson[i].SQLServerName);
+    SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].IPAddress,SQLServersJson[i].ServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
+    SQLServerNames.push(SQLServersJson[i].ServerName);
 }
 
 
