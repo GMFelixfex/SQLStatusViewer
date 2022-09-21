@@ -2,7 +2,7 @@
   "name": "SQLStatusViewer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "ts-node server/server.ts",
     "build": "tsc"

@@ -2,7 +2,7 @@
     {
         "SQLServerIP": "localhost",
         "SQLServerName": "SQLEXPRESS",
-        "Port": 1433,
+        "Port": 1434,
         "Username": "TestAdmin",
         "Password": "134134134"
     }
