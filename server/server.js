@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Http = __importStar(require("http"));
 const DatabaseConnector = __importStar(require("./DatabaseConnector"));
 const DatabaseTables_json_1 = __importDefault(require("../Config/DatabaseTables.json"));
-const DatabaseServer_json_1 = __importDefault(require("../Config/DatabaseServer.json"));
+const DatabaseServers_json_1 = __importDefault(require("../Config/DatabaseServers.json"));
 const HtmlPresetViews_json_1 = __importDefault(require("../Config/HtmlPresetViews.json"));
 const ServerConfig_json_1 = __importDefault(require("../ServerConfig.json"));
 // Sets Port if it was not already set
@@ -40,9 +40,9 @@ if (!port || port == 0) {
 // creates an Array for All connections to SQL-Servers
 var SQLServers = [];
 var SQLServerNames = [];
-for (let i = 0; i < DatabaseServer_json_1.default.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServer_json_1.default[i].IPAddress, DatabaseServer_json_1.default[i].SQLServerName, DatabaseServer_json_1.default[i].Port, DatabaseServer_json_1.default[i].Username, DatabaseServer_json_1.default[i].Password));
-    SQLServerNames.push(DatabaseServer_json_1.default[i].SQLServerName);
+for (let i = 0; i < DatabaseServers_json_1.default.length; i++) {
+    SQLServers.push(new DatabaseConnector.ServerConnection(DatabaseServers_json_1.default[i].IPAddress, DatabaseServers_json_1.default[i].SQLServerName, DatabaseServers_json_1.default[i].Port, DatabaseServers_json_1.default[i].Username, DatabaseServers_json_1.default[i].Password));
+    SQLServerNames.push(DatabaseServers_json_1.default[i].SQLServerName);
 }
 var unformattedData = [];
 var SortedTableInfo = [];
@@ -147,7 +147,7 @@ function GetFromattedData() {
     //loops through all HTML-Tables (Table Presets)
     for (let i = 0; i < unformattedData.length; i++) {
         // Tables header with a Unique Class to maybe at desings later
-        let tableHeader = "<table class='preset_" + i + "'><tr class='header'><th>Tablename</th>";
+        let tableHeader = "<table class='preset_" + i + "'><tr class='header'><th>TableName</th>";
         let keys = HtmlPresetViews_json_1.default[i].Columns;
         for (let j = 0; j < keys.length; j++) {
             tableHeader += "<th class=" + keys[j][1] + ">" + keys[j][0] + "</th>";

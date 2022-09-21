@@ -1,7 +1,7 @@
 import * as Http from 'http'
 import * as DatabaseConnector from './DatabaseConnector'
 import tablesjson from '../Config/DatabaseTables.json'
-import SQLServersJson from '../Config/DatabaseServer.json'
+import SQLServersJson from '../Config/DatabaseServers.json'
 import HtmlPresetViews from '../Config/HtmlPresetViews.json'
 import ServerConfig from '../ServerConfig.json'
 
