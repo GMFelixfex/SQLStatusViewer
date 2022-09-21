@@ -4,7 +4,6 @@ import tablesjson from '../Config/Tables.json'
 import SQLServersJson from '../Config/DatabaseServer.json'
 import ColPresets from '../Config/ColumnPresets.json'
 import ServerConfig from '../ServerConfig.json'
-import { Console } from 'console'
 
 // Sets Port if it was not already set
 let port: number = ServerConfig.Port;
