@@ -1,6 +1,7 @@
 [
     {
         "HtmlPresetId": 0,
+        "ShowTitle":  "Last Lookup",
         "ShowColumns":
         [
             ["id", "bigint"],
@@ -12,6 +13,7 @@
     },
     {
         "HtmlPresetId": 1,
+        "ShowTitle":  "Last Import",
         "ShowColumns":
         [
             ["id", "bigint"],

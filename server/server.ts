@@ -57,7 +57,7 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
 
     // Returns the Formatted Data
     if(pathname == "/index.html"){
-        sendString = GetFromattedData();
+        sendString = "<p>"+ServerConfig.PageTitle+"</p>"+GetFromattedData();
     }
 
 
@@ -69,6 +69,7 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
 
 // Function the get All data form the Databse-Tables
 function GetAllData():  any{
+    console.log("Fetching Data...")
     let preUnsortedTableInfo: any = [];
     let promiseArrays: any = [];
     //Loops through all presets (All Resulting Tables)
@@ -122,7 +123,6 @@ function GetAllData():  any{
         let allDataRows: any = [];
         let allInfoRows: any = [];
         Promise.all(promiseArrays[i]).then((values) =>{
-            console.log(values);
             for (let j = 0; j < values.length; j++) {
                 for (let l = 0; l < values[j].recordset.length; l++) {
                     allDataRows.push(values[j].recordset[l])
@@ -139,6 +139,7 @@ function GetAllData():  any{
     // Only changes the Array at the end of the function to guarantee to always have a full Array
     unformattedData = preSortedTableData;
     SortedTableInfo = preSortedTableInfo;
+    console.log("Finished Fetching")
 }
 
 
@@ -150,7 +151,7 @@ function GetFromattedData(): string{
     for (let i = 0; i < unformattedData.length; i++) {
 
         // Tables header with a Unique Class to maybe at desings later
-        let tableHeader =  "<table class='preset_"+i+"'><tr class='header'><th>TableName</th>"
+        let tableHeader =  "<h2 class='header_"+i+"'>"+HtmlPresetViews[i].ShowTitle+"</h2><table class='preset_"+i+"'><tr class='header'><th>TableName</th>"
         let keys = HtmlPresetViews[i].ShowColumns;
         for (let j = 0; j < keys.length; j++) {
             tableHeader += "<th class="+keys[j][1]+">" + keys[j][0] + "</th>"
@@ -182,7 +183,7 @@ function GetFromattedData(): string{
         
     }
 
-    return FormattedData.join(" ");
+    return FormattedData.join("");
 }
 
 // Formats datetime from UTC to ISO without the "T" and "Z"

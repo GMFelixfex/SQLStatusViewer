@@ -1,17 +1,47 @@
-var ip: string = "http://localhost:8100/";
+var port = 8100;
+//var currentHost: string = "http://"+window.location.hostname+":"+port+"/";
+var currentHost: string = "http://localhost:"+port+"/";
 var currentPage: string = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
 UpdateTables();
 
+
 setInterval(UpdateTables,60000)
+
+var titleElement = document.getElementById("Title");
+titleElement!.innerHTML = "Waiting for Title...";
+
+
 
 
 function UpdateTables(): void {
     var TablePromise = getData();
-    var Tables = "";
+    var Tables;
     TablePromise.then(function(TablePromiseResult: string) {
-        Tables = TablePromiseResult;
+        
+        Tables = new DOMParser().parseFromString(TablePromiseResult,"text/html");
+
+        var newTitle = Tables.body.children[0].innerHTML;
+        var titleElement = document.getElementById("Title");
+        titleElement!.innerHTML = newTitle;
+
+        var pureTables = Tables.getElementsByTagName("table");
+        var pureHeaders = Tables.getElementsByTagName("h2");
+        /*
+        console.log(pureTables[1])
+        console.log(pureHeaders[1])
+        */
+
         var tableDiv = document.getElementById("TableDiv");
-        tableDiv!.innerHTML = Tables;
+        tableDiv!.innerHTML = ""
+        for (let i = 0; i < pureHeaders.length; i++) {
+            tableDiv!.innerHTML += pureHeaders[i].outerHTML;
+            tableDiv!.innerHTML += pureTables[i].outerHTML;
+        }
+        
+        
+        
+
+
         searchFunction();
     })
     
@@ -21,7 +51,7 @@ function UpdateTables(): void {
 
 
 async function getData(): Promise<string> {
-    let url: string = ip + currentPage;
+    let url: string = currentHost + currentPage;
 
     url = url + "?" + "getData=1";
     

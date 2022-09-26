@@ -1,5 +1,6 @@
 {
     "MaxTimeSinceUpdateInMin": 5,
     "DataFetchTimeInMin": 1,
-    "Port": 8100
+    "Port": 8100,
+    "PageTitle": "P400x Magnetizing Machines"
 }
