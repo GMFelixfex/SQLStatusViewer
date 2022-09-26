@@ -1,6 +1,6 @@
 var port = 8100;
-//var currentHost: string = "http://"+window.location.hostname+":"+port+"/";
-var currentHost: string = "http://localhost:"+port+"/";
+var currentHost: string = "http://"+window.location.hostname+":"+port+"/";
+//var currentHost: string = "http://localhost:"+port+"/";
 var currentPage: string = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
 UpdateTables();
 
