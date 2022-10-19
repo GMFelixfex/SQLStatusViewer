@@ -31,40 +31,65 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerConnection = void 0;
 const mssql = __importStar(require("mssql"));
+const msnodesqlv8_1 = __importDefault(require("mssql/msnodesqlv8"));
 class ServerConnection {
     constructor(_SQLServerIP, _SQLServerName, _Port, _Username, _Password) {
-        this.SQLServerIP = _SQLServerIP;
-        this.SQLServerName = _SQLServerName;
-        this.Port = _Port;
-        this.Username = _Username;
-        this.Password = _Password;
-        this.SqlConfig = {
-            user: _Username,
-            password: _Password,
-            server: _SQLServerIP,
-            port: _Port,
-            pool: {
-                max: 10,
-                min: 0,
-                idleTimeoutMillis: 30000
-            },
-            options: {
-                trustServerCertificate: true
-            }
-        };
+        if (_Username == "" || _Password == "") {
+            this.SqlConfig = {
+                server: _SQLServerIP,
+                port: _Port,
+                driver: "msnodesqlv8",
+                options: {
+                    trustedConnection: true,
+                    trustServerCertificate: true
+                }
+            };
+            this.WindowsLogin = true;
+        }
+        else {
+            this.SqlConfig = {
+                user: _Username,
+                password: _Password,
+                server: _SQLServerIP,
+                port: _Port,
+                pool: {
+                    max: 10,
+                    min: 0,
+                    idleTimeoutMillis: 30000
+                },
+                options: {
+                    trustServerCertificate: true
+                }
+            };
+            this.WindowsLogin = false;
+        }
     }
     ExecuteSQL(_query) {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
-            try {
-                yield mssql.connect(this.SqlConfig);
-                result = mssql.query(_query);
+            if (this.WindowsLogin) {
+                try {
+                    yield msnodesqlv8_1.default.connect(this.SqlConfig);
+                    result = msnodesqlv8_1.default.query(_query);
+                }
+                catch (err) {
+                    console.log("SQL Error: " + err);
+                }
             }
-            catch (err) {
-                console.log("SQL Error: " + err);
+            else {
+                try {
+                    yield mssql.connect(this.SqlConfig);
+                    result = mssql.query(_query);
+                }
+                catch (err) {
+                    console.log("SQL Error: " + err);
+                }
             }
             return result;
         });
