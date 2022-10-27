@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var port = 8100;
-var currentHost = "http://" + window.location.hostname + ":" + port + "/";
-//var currentHost: string = "http://localhost:"+port+"/";
+//var currentHost: string = "http://"+window.location.hostname+":"+port+"/";
+var currentHost = "http://localhost:" + port + "/";
 var currentPage = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
 UpdateTables();
 setInterval(UpdateTables, 60000);
