@@ -2,13 +2,6 @@
     {
         "IPAddress": "localhost",
         "ServerName": "SQLEXPRESS",
-        "Port": 1434,
-        "Username": "",
-        "Password": "134134134"
-    },
-    {
-        "IPAddress": "localhost",
-        "ServerName": "SQLTESTSERVER",
         "Port": 1433,
         "Username": "",
         "Password": "134134134"
