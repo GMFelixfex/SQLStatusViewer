@@ -4,6 +4,7 @@ import tablesjson from '../config/DatabaseTables.json'
 import SQLServersJson from '../config/DatabaseServers.json'
 import HtmlPresetViews from '../config/HtmlPresetViews.json'
 import ServerConfig from '../ServerConfig.json'
+import * as URL from 'url'
 
 // Sets Port if it was not already set
 let port: number = ServerConfig.Port;
@@ -20,9 +21,23 @@ for (let i = 0; i < SQLServersJson.length; i++) {
 }
 
 
-
 var unformattedData: any = [];
 var SortedTableInfo: any = [];
+
+var presetDateIds: number[] = [];
+
+for (let i = 0; i < HtmlPresetViews.length; i++) {
+    let keys = HtmlPresetViews[i].ShowColumns;
+    let Date = -1;
+    for (let j = 0; j < keys.length; j++) {
+        if(keys[j][1] == "DateTime" || keys[j][1] == "DateTime2"){
+            Date = j;
+        }
+        
+    }
+    presetDateIds[i] = Date;
+    
+}
 
 
 // Starts Node.js Server with a Listen and Request handler
@@ -50,16 +65,24 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
     _response.setHeader("content-type", "text/html; charset=utf-8");
     _response.setHeader("Access-Control-Allow-Origin", "*");
 
-    let requestURL:  URL = new URL(_request.url!, `http://${_request.headers.host}`);
+
+
+    let requestURL: string = _request.url!;
+    let urlWithQuery: URL.UrlWithParsedQuery = URL.parse(requestURL,true);
     console.log("I hear voices from: " + requestURL);
-    var pathname = requestURL.pathname
+    var query: typeof urlWithQuery.query = urlWithQuery.query;
     var sendString: string = "";
 
-    // Returns the Formatted Data
-    if(pathname == "/index.html"){
-        sendString = "<p>"+ServerConfig.PageTitle+"</p>"+GetFromattedData();
-    }
 
+    // Returns the Formatted Data
+    if(urlWithQuery.pathname == "/process.html"){
+        sendString = "<p>"+ServerConfig.PageTitle+"</p>"+GetFromattedData(<string>query.useddb);
+    } else if(urlWithQuery.pathname == "/index.html"){
+        console.log("its here")
+        sendString = GetStatus();
+        console.log(sendString);
+    }
+    
 
     _response.write(sendString);
     _response.end();
@@ -140,11 +163,12 @@ function GetAllData():  any{
     unformattedData = preSortedTableData;
     SortedTableInfo = preSortedTableInfo;
     console.log("Finished Fetching")
+    
 }
 
 
 //Formats the Data into HTML-Table-Strings 
-function GetFromattedData(): string{
+function GetFromattedData(usedDB: string): string{
     var FormattedData: string[] = [];
 
     //loops through all HTML-Tables (Table Presets)
@@ -161,22 +185,24 @@ function GetFromattedData(): string{
 
         //Loops through all rows of each table
         for (let j = 0; j < unformattedData[i].length; j++) {
+            let dbname: string =  <string>SortedTableInfo[i][j].DatabaseName
+            if(dbname.includes(usedDB)){
+                //Sets the first column to always contain the SQLTableName
+                let tempRow = "<tr><td>"+dbname+"."+SortedTableInfo[i][j].TableSchema+"."+SortedTableInfo[i][j].TableName+"</td>";
+                let values = Object.values(unformattedData[i][j]);
+                for (let k = 0; k < values.length; k++) {
 
-            //Sets the first column to always contain the SQLTableName
-            let tempRow = "<tr><td>"+SortedTableInfo[i][j].DatabaseName+"."+SortedTableInfo[i][j].TableSchema+"."+SortedTableInfo[i][j].TableName+"</td>";
-            let values = Object.values(unformattedData[i][j]);
-            for (let k = 0; k < values.length; k++) {
+                    //Sets color to rows with DateTime contrains
+                    if(keys[k][1] == "DateTime" || keys[k][1] == "DateTime2"){
+                        tempRow += "<td class='"+keys[k][1]+"' style='background-color: "+GetBackgroundColor(<Date>values[k])+"'>" + FormatDateTime(<Date>values[k]) + "</td>";
+                    }else {
+                        tempRow += "<td class="+keys[k][1]+">" + values[k] + "</td>";
+                    }
 
-                //Sets color to rows with DateTime contrains
-                if(keys[k][1] == "DateTime" || keys[k][1] == "DateTime2"){
-                    tempRow += "<td class='"+keys[k][1]+"' style='background-color: "+GetBackgroundColor(<Date>values[k])+"'>" + FormatDateTime(<Date>values[k]) + "</td>";
-                }else {
-                    tempRow += "<td class="+keys[k][1]+">" + values[k] + "</td>";
                 }
-
+                tempRow += "</tr>";
+                tableRows += tempRow;
             }
-            tempRow += "</tr>";
-            tableRows += tempRow;
         }
 
         FormattedData.push(tableHeader+tableRows);
@@ -228,3 +254,39 @@ function GetBackgroundColor(_dateTime: Date): string {
     }
     return hexcode;
 }   
+const minDate = (dates: Date[]) => new Date(Math.min(...dates.map(Number)));
+
+function GetStatus(): string {
+    let Status: string[] = [];
+    let minDates: Date[] = [];
+    let listOfDatabases: string[] = [];
+    let dates2D: Date[][] = [];
+
+    for (let i = 0; i < unformattedData.length; i++) {
+        for (let j = 0; j < unformattedData[i].length; j++) {
+            let values = Object.values(unformattedData[i][j]);
+            let DBListIndex = listOfDatabases.indexOf(SortedTableInfo[i][j].DatabaseName)
+            if(DBListIndex == -1){
+                listOfDatabases.push(<string>SortedTableInfo[i][j].DatabaseName);
+
+            } 
+            if(dates2D[DBListIndex] == undefined){
+                dates2D[DBListIndex] = [];
+            }
+            dates2D[DBListIndex].push(<Date>values[presetDateIds[SortedTableInfo[i][j].HtmlPresetId]])
+
+        }
+        
+    }
+    console.log(listOfDatabases);
+    for (let i = 0; i < dates2D.length; i++) {
+        minDates[i] = minDate(dates2D[i])
+    }
+
+    for (let i = 0; i < listOfDatabases.length; i++) {
+        let currentDatabaseStatus: string = "<div class='Machine' id='DB"+i+"' style='background-color: "+GetBackgroundColor(minDates[i])+"'>"+listOfDatabases[i]+"</div><p>"+listOfDatabases[i]+"</p>"
+        Status.push(currentDatabaseStatus);
+    }
+
+    return Status.join("");
+}

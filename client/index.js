@@ -9,72 +9,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var port = 8100;
-var currentHost = "http://" + window.location.hostname + ":" + port + "/";
-//var currentHost: string = "http://localhost:"+port+"/";
+//var currentHost: string = "http://"+window.location.hostname+":"+port+"/";
+var currentHost = "http://localhost:" + port + "/";
 var currentPage = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
-UpdateTables();
-setInterval(UpdateTables, 60000);
-var titleElement = document.getElementById("Title");
-titleElement.innerHTML = "Waiting for Title...";
-function UpdateTables() {
-    var TablePromise = getData();
-    var Tables;
+UpdateStatus();
+setInterval(UpdateStatus, 60000);
+function UpdateStatus() {
+    let TablePromise = getStatusData();
+    let ReturnElements;
     TablePromise.then(function (TablePromiseResult) {
-        Tables = new DOMParser().parseFromString(TablePromiseResult, "text/html");
-        var newTitle = Tables.body.children[0].innerHTML;
-        var titleElement = document.getElementById("Title");
-        titleElement.innerHTML = newTitle;
-        var pureTables = Tables.getElementsByTagName("table");
-        var pureHeaders = Tables.getElementsByTagName("h2");
-        /*
-        console.log(pureTables[1])
-        console.log(pureHeaders[1])
-        */
-        var tableDiv = document.getElementById("TableDiv");
-        tableDiv.innerHTML = "";
-        for (let i = 0; i < pureHeaders.length; i++) {
-            tableDiv.innerHTML += pureHeaders[i].outerHTML;
-            tableDiv.innerHTML += pureTables[i].outerHTML;
+        console.log(TablePromiseResult);
+        ReturnElements = new DOMParser().parseFromString(TablePromiseResult, "text/html");
+        console.log(ReturnElements);
+        var flexDivs = ReturnElements.getElementsByTagName("div");
+        var Databasenames = ReturnElements.getElementsByTagName("p");
+        var statusFlexbox = document.getElementById("StatusFlexbox");
+        statusFlexbox.innerHTML = "";
+        for (let i = 0; i < flexDivs.length; i++) {
+            statusFlexbox.innerHTML += flexDivs[i].outerHTML;
         }
-        searchFunction();
+        for (let i = 0; i < statusFlexbox.children.length; i++) {
+            statusFlexbox.children[i].addEventListener("click", function () {
+                openTablePage(Databasenames[i].innerHTML);
+            });
+        }
     });
 }
-function getData() {
+function openTablePage(databasename) {
+    console.log("open");
+    localStorage.setItem("LastUsedDatabase", databasename);
+    let curLoc = window.location.pathname.replace("/index.html", "");
+    location.href = curLoc + "/" + "process.html";
+}
+function getStatusData() {
     return __awaiter(this, void 0, void 0, function* () {
         let url = currentHost + currentPage;
-        url = url + "?" + "getData=1";
+        url = url + "?" + "getStatusData=1";
         let response = yield fetch(url);
         let message = yield response.text();
         return message;
     });
-}
-function searchFunction() {
-    var input, filter, tables, tr, td, txtValue;
-    var input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    var tables = document.getElementsByTagName("table");
-    if (input && tables)
-        for (let j = 0; j < tables.length; j++) {
-            tr = tables[j].getElementsByTagName("tr");
-            for (let i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td");
-                if (td.length > 0) {
-                    var showRow = false;
-                    for (let k = 0; k < td.length; k++) {
-                        if (td) {
-                            txtValue = td[k].textContent || td[k].innerText;
-                            if ((txtValue.toUpperCase().indexOf(filter) > -1)) {
-                                showRow = true;
-                            }
-                        }
-                    }
-                    if (showRow) {
-                        tr[i].style.display = "";
-                    }
-                    else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
 }
