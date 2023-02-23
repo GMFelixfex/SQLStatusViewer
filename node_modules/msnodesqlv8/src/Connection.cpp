@@ -53,7 +53,6 @@ namespace mssql
 	}
 
 	void Connection::Init(Local<Object> exports) {
-		const auto context = exports->CreationContext();
   		Nan::HandleScope scope;
 		const auto initialized = OdbcConnection::InitializeEnvironment();
 		const auto name = Nan::New("Connection").ToLocalChecked();
@@ -71,8 +70,8 @@ namespace mssql
 
 		api(tpl);
 
-  		constructor.Reset(tpl->GetFunction(context).ToLocalChecked());
-		Nan::Set(exports, name, tpl->GetFunction(context).ToLocalChecked());
+  		constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
+		Nan::Set(exports, name, Nan::GetFunction(tpl).ToLocalChecked());
  	}
 
 	Connection::~Connection()
@@ -81,7 +80,7 @@ namespace mssql
 		//connectionBridge->Collect();
 	}
 
-	void Connection::close(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::close(NanCb info)
 	{
 		const auto cb = info[0].As<Object>();
 		const auto* const connection = Unwrap<Connection>(info.This());
@@ -89,7 +88,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::begin_transaction(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::begin_transaction(NanCb info)
 	{
 		const auto cb = info[0].As<Object>();
 		const auto* const connection = Unwrap<Connection>(info.This());
@@ -97,7 +96,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::commit(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::commit(NanCb info)
 	{
 		const auto cb = info[0].As<Object>();
 		const auto* const connection = Unwrap<Connection>(info.This());
@@ -105,7 +104,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::rollback(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::rollback(NanCb info)
 	{
 		const auto cb = info[0].As<Object>();
 		const auto* const connection = Unwrap<Connection>(info.This());
@@ -113,7 +112,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+	void Connection::New(NanCb info) {
 		const auto context = info.GetIsolate()->GetCurrentContext();
   		if (info.IsConstructCall()) {
     		// Invoked as constructor: `new MyObject(...)`
@@ -130,7 +129,7 @@ namespace mssql
   		}
 	}
 
-	void Connection::query(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::query(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto query_object = info[1].As<Object>();
@@ -142,7 +141,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::prepare(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::prepare(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto query_object = info[1].As<Object>();
@@ -153,7 +152,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::bind_query(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::bind_query(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto params = info[1].As<Array>();
@@ -164,7 +163,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::call_procedure(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::call_procedure(NanCb info)
 	{
 		// need to ensure the signature is changed (in js ?) to form (?) = call sproc (?, ? ... );
 		const auto query_id = info[0].As<Number>();
@@ -177,7 +176,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::unbind(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::unbind(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto callback = info[1].As<Object>();
@@ -186,7 +185,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::free_statement(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::free_statement(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto callback = info[1].As<Object>();
@@ -195,7 +194,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::read_column(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::read_column(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto number_rows = info[1].As<Number>();
@@ -205,7 +204,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::read_next_result(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::read_next_result(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto callback = info[1].As<Object>();
@@ -214,7 +213,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::open(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::open(NanCb info)
 	{
 		const auto connection_object = info[0].As<Object>();
 		const auto callback = info[1].As<Object>();
@@ -224,7 +223,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::cancel_statement(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::cancel_statement(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto callback = info[1].As<Object>();
@@ -234,7 +233,7 @@ namespace mssql
 		info.GetReturnValue().Set(ret);
 	}
 
-	void Connection::polling_mode(const Nan::FunctionCallbackInfo<v8::Value>& info)
+	void Connection::polling_mode(NanCb info)
 	{
 		const auto query_id = info[0].As<Number>();
 		const auto v1 = info[1].As<Boolean>();

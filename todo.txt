@@ -1,6 +1,0 @@
-gridlike hauptseite für 10-15 dantenbanken, die nur mit rot/grün/Gelb angezeigt werden
-
-bessere suchfunktion mit texthighlighting
-
-Unterseite mit extras: gelich wie die index.html aber dabei die suchfunktion highjacken um nur die zugehörigen datenbanken anzuzeigen
-

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>SQLStatusViewer - Dashboard</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
+  <link rel="stylesheet" href="./style_index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<aside class="sidebar position-fixed top-0 left-0 overflow-auto h-100 float-left" id="show-side-navigation1">
+  <i class="uil-bars close-aside d-md-none d-lg-none" data-close="show-side-navigation1"></i>
+  <div class="sidebar-header d-flex px-3 py-4">
+    <div class="ms-2">
+      <h5 class="fs-7 mb-0">
+        <a class="text-decoration-none" href="#">Navigation</a>
+      </h5>
+      <p class="mt-1 mb-0">All extra Functionality</p>
+    </div>
+  </div>
+
+  <div class="search position-relative text-center px-4 py-3 mt-2">
+    <input type="text" id="SearchInput" class="search search-input form-control w-100 border-0 bg-transparent" placeholder="Search here">
+    <i class="fa fa-search position-absolute d-block fs-6"></i>
+  </div>
+
+  <ul class="categories list-unstyled">
+    <li class="has-dropdown">
+      <i class="uil-servers fa-fw" id="SQLSourcesIcon"> SQLSources</i><a href="#"></a>
+      <ul class="sidebar-dropdown list-unstyled" id="SideSQLSources">
+        <li><a href="#"><i class="uil-database fa-fw"></i> SQL-Server-1</a></li>
+        <li><a href="#"><i class="uil-database fa-fw"></i> SQL-Server-1</a></li>
+        <li><a href="#"><i class="uil-database fa-fw"></i> SQL-Server-1</a></li>
+        <li><a href="#"><i class="uil-database fa-fw"></i> SQL-Server-1</a></li>
+        <li><a href="#"><i class="uil-database fa-fw"></i> SQL-Server-1</a></li>
+      </ul>
+    </li>
+    <li id="addSource">
+      <i class="uil-plus fa-fw"> Add Source</i>
+    </li>
+    <li id="GridSelectLine">
+      <i class="uil-grids fa-fw"> Gridsize:</i>
+      <select id="GridSizeSelect" name="GridSizeSelect">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+    </li>
+    <li id="OrderSelectLine">
+      <i class="uil-sort-amount-down fa-fw"> Orderby:</i> 
+        <select id="OrderSelect" name="OrderSelect">
+          <option value="Standart">Standart</option>
+          <option value="Category">Category</option>
+          <option value="Alphabetical">Alphabetical</option>
+          <option value="Urgency">Urgency</option>
+        </select>
+    </li>
+    <li id="DisplaySelectLine">
+      <i class="uil-monitor fa-fw"> Display:</i> 
+        <select id="DisplaySelect" name="DisplaySelect">
+          <option value="Grid">Grid</option>
+          <option value="List">List</option>
+        </select>
+    </li>
+    <li id="UpdateTimeLine">
+      <i class="uil-clock fa-fw"> Time(min):</i> 
+      <input id="InputTimeForUpdate" type="number">
+    </li>
+</aside>
+
+<section id="wrapper">
+  <nav class="navbar navbar-expand-md">
+    <div class="container-fluid mx-2">
+      <div class="navbar-header">
+        <button class="navbar-toggler" id="toggle-navbar" type="button" data-bs-toggle="collapse" data-bs-target="#toggle-navbar" aria-controls="toggle-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <i data-show="show-side-navigation1" class="uil-bars text-white show-side-btn2"></i>
+        </button>
+        <svg class="page__logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 113.386 16.257" style="enable-background:new 0 0 113.386 16.257;" xml:space="preserve">
+          <rect x="78.557" y="0.273" width="2.753" height="9.898"></rect>
+          <polygon points="15.646,0.272 15.646,10.171 28.016,10.171 28.016,8.216 18.397,8.216 18.397,6.204 25.293,6.204 25.293,4.246
+              18.397,4.246 18.397,2.228 28.016,2.228 28.016,0.272 "></polygon>
+          <path d="M94.691,7.524c-0.898,0.634-2.071,0.964-3.53,0.964c-1.455,0-2.617-0.33-3.513-0.964
+              c-0.899-0.647-1.291-1.39-1.292-2.312c0.001-0.906,0.393-1.646,1.292-2.291c0.896-0.635,2.063-0.966,3.513-0.966
+              c1.451,0,2.622,0.334,3.523,0.974c0.914,0.652,1.306,1.388,1.31,2.283C95.99,6.134,95.598,6.875,94.691,7.524 M96.533,1.427
+              C95.12,0.468,93.321,0,91.149,0c-2.156,0-3.948,0.468-5.355,1.427c-1.411,0.946-2.176,2.238-2.17,3.779
+              c-0.006,1.543,0.763,2.838,2.18,3.796c1.423,0.966,3.206,1.442,5.345,1.442c2.156,0,3.952-0.47,5.372-1.436
+              c1.417-0.949,2.19-2.248,2.182-3.802C98.711,3.665,97.943,2.373,96.533,1.427"></path>
+          <path d="M55.827,7.381c-0.847,0.545-2.05,0.836-3.616,0.836h-3.393V2.228h3.393c1.497,0,2.683,0.302,3.565,0.871
+              c0.887,0.586,1.278,1.258,1.288,2.132C57.054,6.153,56.674,6.829,55.827,7.381 M57.64,1.616c-1.418-0.903-3.255-1.344-5.483-1.344
+              h-6.088v9.9h6.088c2.28,0,4.122-0.423,5.522-1.298c1.395-0.865,2.144-2.11,2.135-3.612C59.823,3.762,59.06,2.511,57.64,1.616"></path>
+          <polygon points="11.029,10.172 13.993,10.171 7.221,4.242 13.492,0.272 9.35,0.272 2.752,4.463 2.752,0.272 0,0.272
+              0,10.172 2.752,10.172 2.752,7.094 5.503,5.333 	"></polygon>
+          <path d="M64.81,4.246V2.23h7.031c0.717,0,1.21,0.452,1.21,1.008c0,0.557-0.493,1.009-1.21,1.009L64.81,4.246z
+               M72.161,6.204L72.161,6.204c2.112,0,3.646-1.327,3.646-2.966c0-1.638-1.534-2.966-3.646-2.966H62.059v9.899h2.751V6.204h4.405
+              l3.89,3.967h2.946L72.161,6.204z"></path>
+          <rect y="13.504" style="fill:#D81A26;" width="113.386" height="2.753"></rect>
+          <polygon points="40.351,0.272 40.351,7.375 33.48,0.272 30.73,0.272 30.73,10.172 33.48,10.172 33.48,3.069
+              40.351,10.172 43.1,10.172 43.1,0.272 	"></polygon>
+          <polygon points="110.637,0.272 110.637,7.375 103.766,0.272 101.016,0.272 101.016,10.172 103.766,10.172
+              103.766,3.069 110.637,10.172 113.386,10.172 113.386,0.272 	"></polygon>
+        </svg>
+      </div>
+      <div class="collapse navbar-collapse" id="toggle-navbar">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i data-show="show-side-navigation1" class="uil-bars show-side-btn"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="p-4">
+    <div class="welcome">
+      <div class="content rounded-3 p-3">
+        <h1 class="fs-3" id="StatusTitle">Overview of Running Processes</h1>
+      </div>
+    </div>
+    <section class="mt-4 mb-4" id="Displaysection">
+
+    </section>
+    <section class="" id="gridsection">
+      <div class="row" id="gridbox">
+            
+      </div>
+    </section>
+    <section class="" id="listsection">
+      <div class="row" id="listbox">
+            
+      </div>
+    </section>
+  </div>
+</section>
+<div class="position-absolute h-100 w-100 sticky-top" id="promtbox" hidden>
+  <div class="position-absolute h-100 w-100 sticky-top" id="promtbackground"></div>
+  <div class="d-flex align-items-center" id="promt">
+    <div id="Addform">
+      <label for="DatasourceDisplayTitle">Title:</label>
+      <input type="text" id="DatasourceDisplayTitle" name="DatasourceDisplayTitle">
+      <label for="DataSourceServers">Server:</label>
+      <select id="DataSourceServers" name="DataSourceServers">
+
+      </select>
+      <label for="DataSourceDB">Database:</label>
+      <select id="DataSourceDB" name="DataSourceDB" method="">
+
+      </select>
+      <label for="DataSourceSchemas">Schemas:</label>
+      <select id="DataSourceSchemas" name="DataSourceSchemas">
+
+      </select>
+      <label for="DataSourceTables">Table:</label>
+      <select id="DataSourceTables" name="DataSourceTables" method="">
+
+      </select>
+      <label for="DataSourceCategories">Categories:</label>
+      <select id="DataSourceCategories" name="DataSourceCategories">
+
+      </select>
+      <label for="DataSourceSelectionCondition">Condition:</label>
+      <select id="DataSourceSelectionCondition" name="DataSourceSelectionCondition">
+
+      </select>
+      <label for="DataSourceStatusColumn">Status Collumn:</label>
+      <select id="DataSourceStatusColumn" name="DataSourceStatusColumn">
+
+      </select>
+      <span>Columns:</span>
+      <div class="d-flex align-items-center flex-wrap" id="collumnFlex">
+
+      </div>
+      <button id="AddDataSource">Add Datasource</button>
+      <button id="CancelDataSource">Cancel</button>
+      
+    <div>
+  </div>
+  
+</div>
+
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js'></script>
+
+<script  src="./index.js"></script>
+
+</body>
+</html>
