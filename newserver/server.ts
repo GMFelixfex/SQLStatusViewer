@@ -222,12 +222,12 @@ async function AddSource(_servernumber:number, _dbnumber:number, _tablenumber:nu
 
 function GetCondition(_conditionNumber: number, extra:any ): string {
     if(_conditionNumber <= 1){
-        return SelectionConditions[_conditionNumber].replace("@CurrentTable",extra[1]+"."+extra[3]+"."+extra[2]);
+        return SelectionConditions[_conditionNumber].replace("@CurrentTable","["+extra[1]+"].["+extra[3]+"].["+extra[2]+"]");
     }
     else if(_conditionNumber == (2 || 3)){
         var find = "@Statuscolumn"
         var re = new RegExp(find, 'g')
-        return SelectionConditions[_conditionNumber].replace("@CurrentTable",extra[1]+"."+extra[3]+"."+extra[2]).replace(re,extra[4]);;
+        return SelectionConditions[_conditionNumber].replace("@CurrentTable","["+extra[1]+"].["+extra[3]+"].["+extra[2]+"]").replace(re,extra[4]);
     }
     else {
         return "";

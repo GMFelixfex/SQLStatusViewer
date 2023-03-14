@@ -51,9 +51,6 @@ export class ServerConnection {
         return result
     }
 
-
-
-
     public async GetCollumnNamesFromTable(_dbname:string,_tablename: string,_tableschema:string): Promise<any>{
         var result = null;
         try{

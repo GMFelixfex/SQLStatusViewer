@@ -215,13 +215,12 @@ function AddSource(_servernumber, _dbnumber, _tablenumber, _tableschemanumber, _
 }
 function GetCondition(_conditionNumber, extra) {
     if (_conditionNumber <= 1) {
-        return SelectionConditions_json_1.default[_conditionNumber].replace("@CurrentTable", extra[1] + "." + extra[3] + "." + extra[2]);
+        return SelectionConditions_json_1.default[_conditionNumber].replace("@CurrentTable", "[" + extra[1] + "].[" + extra[3] + "].[" + extra[2] + "]");
     }
     else if (_conditionNumber == (2 || 3)) {
         var find = "@Statuscolumn";
         var re = new RegExp(find, 'g');
-        return SelectionConditions_json_1.default[_conditionNumber].replace("@CurrentTable", extra[1] + "." + extra[3] + "." + extra[2]).replace(re, extra[4]);
-        ;
+        return SelectionConditions_json_1.default[_conditionNumber].replace("@CurrentTable", "[" + extra[1] + "].[" + extra[3] + "].[" + extra[2] + "]").replace(re, extra[4]);
     }
     else {
         return "";

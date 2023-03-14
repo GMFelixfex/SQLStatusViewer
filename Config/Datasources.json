@@ -183,5 +183,38 @@
 			"email",
 			"datetime"
 		]
+	},
+	{
+		"DisplayTitle": "",
+		"ServerName": "SQLEXPRESS",
+		"DatabaseName": "wowsertesting_p4-Mag32",
+		"TableName": "MOCK_DATA",
+		"TableSchema": "dbo",
+		"SelectCondition": "WHERE [datetime] = (SELECT MAX( [datetime] ) from [wowsertesting_p4-Mag32].[dbo].[MOCK_DATA] )",
+		"Category": "Last Import",
+		"StatusColumn": "datetime",
+		"Columns": [
+			"id",
+			"first_name",
+			"last_name",
+			"datetime"
+		]
+	},
+	{
+		"DisplayTitle": "eqweqweqw",
+		"ServerName": "SQLEXPRESS",
+		"DatabaseName": "wowsertesting_p4-Mag32",
+		"TableName": "MOCK_DATA",
+		"TableSchema": "dbo",
+		"SelectCondition": "WHERE [datetime] = (SELECT MAX( [datetime] ) from [wowsertesting_p4-Mag32].[dbo].[MOCK_DATA] )",
+		"Category": "Last Lookup",
+		"StatusColumn": "datetime",
+		"Columns": [
+			"id",
+			"first_name",
+			"last_name",
+			"email",
+			"datetime"
+		]
 	}
 ]
