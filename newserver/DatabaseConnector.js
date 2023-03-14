@@ -59,56 +59,11 @@ class ServerConnection {
             return result;
         });
     }
-    ExecuteSimpleParameterized() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield msnodesqlv8_1.default.connect(this.SqlConfig);
-            var request = new msnodesqlv8_1.default.Request();
-            request.input("param0", 'Puff');
-            request.query("select * from testing1.dbo.MOCK_DATA where first_name = @param0", function (err, res) {
-                console.log(err);
-                console.log(res.recordset[0]);
-                return res === null || res === void 0 ? void 0 : res.recordset;
-            });
-        });
-    }
-    ExecutePrepared(_dbname, _dbtype, _tablename, _collumNames, _selectCondition) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var result = null;
-            try {
-                var pool = yield msnodesqlv8_1.default.connect(this.SqlConfig);
-                const ps = new msnodesqlv8_1.default.PreparedStatement(pool);
-                var params = "";
-                var paramArray = [];
-                for (let index = 0; index < _collumNames.length; index++) {
-                    params += " @param" + index;
-                    ps.input("param" + index, msnodesqlv8_1.default.VarChar(100));
-                    var par = 'param' + index;
-                    paramArray[index] = { par: _collumNames[index] };
-                }
-                ps.prepare("select " + params + " from [" + _dbname + "].[" + _dbtype + "].[" + _tablename + "]" + _selectCondition, err => {
-                    console.log(err);
-                    ps.execute({ param0: "name" }, (err, sqlresult) => {
-                        console.log(ps.statement);
-                        console.log(sqlresult);
-                        console.log(err);
-                        if (err != null) {
-                            console.log("SQL Error: " + err);
-                        }
-                        result = sqlresult;
-                    });
-                });
-            }
-            catch (err) {
-                console.log("SQL Error: " + err);
-            }
-            return result;
-        });
-    }
     GetCollumnNamesFromTable(_dbname, _tablename, _tableschema) {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
             try {
-                var query = "use " + _dbname + " SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + _tableschema + "." + _tablename + "') ";
+                var query = "use [" + _dbname + "] SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('[" + _tableschema + "].[" + _tablename + "]') ";
                 yield msnodesqlv8_1.default.connect(this.SqlConfig);
                 result = msnodesqlv8_1.default.query(query);
             }
@@ -123,7 +78,7 @@ class ServerConnection {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
             try {
-                var query = "use " + _dbname + " select name from sys.schemas";
+                var query = "use [" + _dbname + "] select name from sys.schemas";
                 yield msnodesqlv8_1.default.connect(this.SqlConfig);
                 result = msnodesqlv8_1.default.query(query);
             }
@@ -138,7 +93,7 @@ class ServerConnection {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
             try {
-                var query = "use " + _dbname + " select name from sys.tables";
+                var query = "use [" + _dbname + "] select name from sys.tables";
                 yield msnodesqlv8_1.default.connect(this.SqlConfig);
                 result = msnodesqlv8_1.default.query(query);
             }

@@ -1,6 +1,6 @@
 [
-    "WHERE ID = (SELECT MAX(ID) from @CurrentTable )",
-    "WHERE ID = (SELECT Min(ID) from @CurrentTable )",
-    "WHERE @Statuscolumn = (SELECT MAX( @Statuscolumn ) from @CurrentTable )",
-    "WHERE @Statuscolumn = (SELECT Min( @Statuscolumn ) from @CurrentTable )"
+    "WHERE ID = (SELECT MAX(ID) from [@CurrentTable] )",
+    "WHERE ID = (SELECT Min(ID) from [@CurrentTable] )",
+    "WHERE [@Statuscolumn] = (SELECT MAX( [@Statuscolumn] ) from [@CurrentTable] )",
+    "WHERE [@Statuscolumn] = (SELECT Min( [@Statuscolumn] ) from [@CurrentTable] )"
 ]
