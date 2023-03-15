@@ -331,25 +331,40 @@ function GetFullData() {
     Promise.all(DataArray).then((values) => {
         for (let j = 0; j < values.length; j++) {
             var Sourcedata = [];
-            for (let l = 0; l < values[j].recordset.length; l++) {
-                Sourcedata.push(values[j].recordset[l]);
+            if (values[j] != null) {
+                for (let l = 0; l < values[j].recordset.length; l++) {
+                    Sourcedata.push(values[j].recordset[l]);
+                }
+                FetchedData.push({ SourceObject: Datasources[j], Data: Sourcedata });
             }
-            FetchedData.push({ SourceObject: Datasources[j], Data: Sourcedata });
+            else {
+                FetchedData.push({ SourceObject: Datasources[j], Data: "Error: Database not Online" });
+            }
         }
+        console.log(FetchedData);
     });
 }
 function FetchDataSimple(Datasource) {
     return __awaiter(this, void 0, void 0, function* () {
         var serverindex = SQLServerNames.indexOf(Datasource.ServerName);
-        var query = "Select ";
-        for (let index = 0; index < Datasource.Columns.length; index++) {
-            query += Datasource.Columns[index];
-            if (index < Datasource.Columns.length - 1) {
-                query += ", ";
+        var res = SQLServers[serverindex].VerifyDBState(Datasource.DatabaseName);
+        return res.then((value) => {
+            var state = value.recordset[0].state;
+            if (state == 0) {
+                var query = "Select ";
+                for (let index = 0; index < Datasource.Columns.length; index++) {
+                    query += Datasource.Columns[index];
+                    if (index < Datasource.Columns.length - 1) {
+                        query += ", ";
+                    }
+                }
+                query += " From [" + Datasource.DatabaseName + "].[" + Datasource.TableSchema + "].[" + Datasource.TableName + "] " + Datasource.SelectCondition;
+                console.log(query);
+                return SQLServers[serverindex].ExecuteSQL(query);
             }
-        }
-        query += " From [" + Datasource.DatabaseName + "].[" + Datasource.TableSchema + "].[" + Datasource.TableName + "] " + Datasource.SelectCondition;
-        console.log(query);
-        return SQLServers[serverindex].ExecuteSQL(query);
+            else
+                return null;
+        });
     });
 }
+console.log("end of programm");

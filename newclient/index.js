@@ -15,6 +15,11 @@ document.getElementById("InputTimeForUpdate").value = "15";
 GetServers();
 GetCategories();
 GetStatus();
+setInterval(function () {
+    GetServers();
+    GetCategories();
+    GetStatus();
+}, 300000);
 var CurrentServerObjects = [];
 //#region Setup
 var currentSearchTerm = "";
@@ -326,7 +331,10 @@ function GenerateSidepanel() {
     SideSQLSources.innerHTML = "";
     for (let index = 0; index < CurrentServerObjects.length; index++) {
         var e = document.createElement("li");
-        e.innerHTML = "<a href='#'><i class='uil-database fa-fw'></i>" + CurrentServerObjects[index].SourceObject.DisplayTitle + "</a>";
+        if (typeof (CurrentServerObjects[index].Data) === "string")
+            e.innerHTML = "<a href='#'><i class='uil-exclamation-octagon fa-fw'></i>" + CurrentServerObjects[index].SourceObject.DisplayTitle + "</a>";
+        else
+            e.innerHTML = "<a href='#'><i class='uil-database fa-fw'></i>" + CurrentServerObjects[index].SourceObject.DisplayTitle + "</a>";
         SideSQLSources.appendChild(e);
     }
 }
@@ -336,10 +344,8 @@ function GenerateStatus() {
     var gridsizeselect = document.getElementById("GridSizeSelect");
     var orderbyselect = document.getElementById("OrderSelect");
     var displayselect = document.getElementById("DisplaySelect");
-    var DisplaySection = document.getElementById("Displaysection");
     var gridsection = document.getElementById("gridsection");
     var listsection = document.getElementById("listsection");
-    DisplaySection.innerHTML = "";
     var _method = orderbyselect.value;
     var gridsize = parseInt(gridsizeselect.value);
     var displaytype = displayselect.value;
@@ -411,7 +417,10 @@ function GenerateStatus() {
         else if (_method == "Urgency") {
             var forSorting = [];
             for (let i = 0; i < CurrentServerObjects.length; i++) {
-                var datetouse = CurrentServerObjects[i].Data[CurrentServerObjects[i].Data.length - 1][CurrentServerObjects[i].SourceObject.StatusColumn];
+                if (CurrentServerObjects[i].Data instanceof String)
+                    var datetouse = "";
+                else
+                    var datetouse = CurrentServerObjects[i].Data[CurrentServerObjects[i].Data.length - 1][CurrentServerObjects[i].SourceObject.StatusColumn];
                 forSorting.push({ index: i, date: datetouse });
             }
             var forSort = Array.from(forSorting);
@@ -424,12 +433,22 @@ function GenerateStatus() {
 }
 function DisplayAs(_currentobject, _displaytype, _method, _gridbox, _listbox) {
     if (_currentobject.SourceObject.DisplayTitle.toLowerCase().includes(currentSearchTerm) || currentSearchTerm == "") {
+        var errorDisplay = false;
+        if (typeof (_currentobject.Data) === "string")
+            errorDisplay = true;
         var lastdate = "";
-        lastdate = _currentobject.Data[_currentobject.Data.length - 1][_currentobject.SourceObject.StatusColumn];
+        if (errorDisplay)
+            lastdate = "";
+        else
+            lastdate = _currentobject.Data[_currentobject.Data.length - 1][_currentobject.SourceObject.StatusColumn];
         var formattedDate = FormatDateTime(lastdate);
+        console.log(formattedDate);
         if (_displaytype == "Grid") {
             var e = document.createElement("div");
-            e.setAttribute("class", "d-flex align-items-center rounded-2 p-3 Statusdiv");
+            if (errorDisplay)
+                e.setAttribute("class", "d-flex align-items-center rounded-2 p-3 Statusdiv StatusDivError");
+            else
+                e.setAttribute("class", "d-flex align-items-center rounded-2 p-3 Statusdiv");
             if (formattedDate != null) {
                 e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate) + ";'></div>";
                 e.innerHTML += "<div class='ms-3 statustext'><h3 class='fs-5 mb-1 testingwithstyle'>" + _currentobject.SourceObject.DisplayTitle + "</h3><p class='mb-0 Statuspara'>Statuschecked: " + formattedDate + "</p></div>";
@@ -444,7 +463,10 @@ function DisplayAs(_currentobject, _displaytype, _method, _gridbox, _listbox) {
         }
         else if (_displaytype == "List") {
             var e = document.createElement("div");
-            e.setAttribute("class", "d-flex align-items-center rounded-2 p-2 Statusdiv2");
+            if (errorDisplay)
+                e.setAttribute("class", "d-flex align-items-center rounded-2 p-2 Statusdiv2 StatusDivError");
+            else
+                e.setAttribute("class", "d-flex align-items-center rounded-2 p-2 Statusdiv2");
             if (formattedDate != null) {
                 e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate) + ";'></div>";
                 e.innerHTML += "<h3 class='fs-5 mb-0 ms-3'>" + _currentobject.SourceObject.DisplayTitle + "</h3><h3 class='mb-0 ms-3 mt-1 fs-6 '>Statuschecked: " + formattedDate + "</h3>";
@@ -500,27 +522,32 @@ function DisplayDetailedStats(_currentobject) {
     }
 }
 function CreateDisplayTable(_currentobject, e, sortingdirection) {
-    var trh = document.createElement("tr");
-    for (let i = 0; i < _currentobject.SourceObject.Columns.length; i++) {
-        trh.innerHTML += "<th>" + _currentobject.SourceObject.Columns[i] + "</th>";
-    }
-    e.appendChild(trh);
-    if (sortingdirection) {
-        for (let i = 0; i < _currentobject.Data.length; i++) {
-            var tr = document.createElement("tr");
-            for (let j = 0; j < _currentobject.SourceObject.Columns.length; j++) {
-                tr.innerHTML += "<td>" + _currentobject.Data[i][_currentobject.SourceObject.Columns[j]] + "</td>";
-            }
-            e.appendChild(tr);
-        }
+    if (typeof (_currentobject.Data) === "string") {
+        e.innerText = "" + _currentobject.Data;
     }
     else {
-        for (let i = _currentobject.Data.length - 1; i >= 0; i--) {
-            var tr = document.createElement("tr");
-            for (let j = 0; j < _currentobject.SourceObject.Columns.length; j++) {
-                tr.innerHTML += "<td>" + _currentobject.Data[i][_currentobject.SourceObject.Columns[j]] + "</td>";
+        var trh = document.createElement("tr");
+        for (let i = 0; i < _currentobject.SourceObject.Columns.length; i++) {
+            trh.innerHTML += "<th>" + _currentobject.SourceObject.Columns[i] + "</th>";
+        }
+        e.appendChild(trh);
+        if (sortingdirection) {
+            for (let i = 0; i < _currentobject.Data.length; i++) {
+                var tr = document.createElement("tr");
+                for (let j = 0; j < _currentobject.SourceObject.Columns.length; j++) {
+                    tr.innerHTML += "<td>" + _currentobject.Data[i][_currentobject.SourceObject.Columns[j]] + "</td>";
+                }
+                e.appendChild(tr);
             }
-            e.appendChild(tr);
+        }
+        else {
+            for (let i = _currentobject.Data.length - 1; i >= 0; i--) {
+                var tr = document.createElement("tr");
+                for (let j = 0; j < _currentobject.SourceObject.Columns.length; j++) {
+                    tr.innerHTML += "<td>" + _currentobject.Data[i][_currentobject.SourceObject.Columns[j]] + "</td>";
+                }
+                e.appendChild(tr);
+            }
         }
     }
 }

@@ -119,5 +119,20 @@ class ServerConnection {
             return result;
         });
     }
+    VerifyDBState(_dbname) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var result = null;
+            try {
+                var query = "select name, state from sys.databases where name = '" + _dbname + "'";
+                yield msnodesqlv8_1.default.connect(this.SqlConfig);
+                result = msnodesqlv8_1.default.query(query);
+            }
+            catch (err) {
+                console.log("SQL Error: " + err);
+                return null;
+            }
+            return result;
+        });
+    }
 }
 exports.ServerConnection = ServerConnection;

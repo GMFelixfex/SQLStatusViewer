@@ -6,6 +6,7 @@ import ServerConfig from '../ServerConfig.json'
 import SelectionConditions from '../Config/SelectionConditions.json'
 import DataCategories from '../Config/DataCategories.json'
 import * as URL from 'url'
+import { Console } from 'console'
 
 
 // Sets Port if it was not already set
@@ -17,10 +18,11 @@ if (!port || port == 0) {
 var SQLServers: DatabaseConnector.ServerConnection[] = [];
 var SQLServerNames: string[] = []
 
-for (let i = 0; i < SQLServersJson.length; i++) {
-    SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].IPAddress,SQLServersJson[i].ServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
-    SQLServerNames.push(SQLServersJson[i].ServerName);
-}
+    for (let i = 0; i < SQLServersJson.length; i++) {
+        SQLServers.push(new DatabaseConnector.ServerConnection(SQLServersJson[i].IPAddress,SQLServersJson[i].ServerName,SQLServersJson[i].Port,SQLServersJson[i].Username,SQLServersJson[i].Password));
+        SQLServerNames.push(SQLServersJson[i].ServerName);
+    }
+
 
 var Datasourcestext = fs.readFileSync("../SQLStatusViewer/Config/Datasources.json","utf8");
 var Datasources = JSON.parse(Datasourcestext);
@@ -35,11 +37,18 @@ function startServer(_port: number): void {
     server.addListener("request", handleRequest);
     server.addListener("listening", handleListen);
     // Retrieves the SQL-Data
+    
+    
+    
+
     GetFullData();
     setInterval(function(){
         GetFullData();
-       
+    
     },ServerConfig.DataFetchTimeInMin*60*1000)
+
+    
+    
     server.listen(_port);
     
 }
@@ -350,11 +359,17 @@ function GetFullData(): any{
     Promise.all(DataArray).then((values) =>{
         for (let j = 0; j < values.length; j++) {
             var Sourcedata = [];
-            for (let l = 0; l < values[j].recordset.length; l++) {
-                Sourcedata.push(values[j].recordset[l])
+            if(values[j] != null){
+                for (let l = 0; l < values[j].recordset.length; l++) {
+                    Sourcedata.push(values[j].recordset[l])
+                }
+                FetchedData.push({SourceObject: Datasources[j], Data: Sourcedata});
+            } else {
+                FetchedData.push({SourceObject: Datasources[j], Data: "Error: Database not Online"})
             }
-            FetchedData.push({SourceObject: Datasources[j], Data: Sourcedata});
+            
         }
+        console.log(FetchedData)
     })
 
     
@@ -363,14 +378,27 @@ function GetFullData(): any{
 
 async function FetchDataSimple(Datasource: typeof Datasources[number]): Promise<any>{
     var serverindex = SQLServerNames.indexOf(Datasource.ServerName);
-    var query = "Select ";
-        for (let index = 0; index < Datasource.Columns.length; index++) {
-            query += Datasource.Columns[index];
-            if(index < Datasource.Columns.length-1){
-                query+= ", "
+    var res = SQLServers[serverindex].VerifyDBState(Datasource.DatabaseName)
+    return res.then((value)=>{
+        var state = value.recordset[0].state
+        if(state==0){
+            var query = "Select ";
+            for (let index = 0; index < Datasource.Columns.length; index++) {
+                query += Datasource.Columns[index];
+                if(index < Datasource.Columns.length-1){
+                    query+= ", "
+                }
             }
+            query += " From ["+Datasource.DatabaseName+"].["+Datasource.TableSchema+"].["+Datasource.TableName+"] "+Datasource.SelectCondition;
+            console.log(query);
+            return  SQLServers[serverindex].ExecuteSQL(query)
         }
-        query += " From ["+Datasource.DatabaseName+"].["+Datasource.TableSchema+"].["+Datasource.TableName+"] "+Datasource.SelectCondition;
-        console.log(query);
-    return  SQLServers[serverindex].ExecuteSQL(query)
+        else return null
+    })
+
+    
+
+
 }
+
+console.log("end of programm")

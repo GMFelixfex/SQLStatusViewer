@@ -107,6 +107,20 @@ export class ServerConnection {
         }
         return result;
     }
+
+    public async VerifyDBState(_dbname:string): Promise<any>{
+        var result = null;
+        try{
+            var query = "select name, state from sys.databases where name = '"+_dbname+"'"
+            await sql.connect(this.SqlConfig);
+            result = sql.query(query);
+        }
+        catch (err){
+            console.log("SQL Error: "+err)
+            return null;
+        }
+        return result;
+    }
 }
 
 
