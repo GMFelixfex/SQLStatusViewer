@@ -108,22 +108,32 @@ function handleRequest(_request, _response) {
         else if (apiMethod == "GetDatabases") {
             var res = GetDatabases(parseInt(requestBodyJSON.serverid));
             res.then((value) => {
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
+                else {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
             });
         }
         else if (apiMethod == "GetTables") {
             var res = GetTables(parseInt(requestBodyJSON.serverid), parseInt(requestBodyJSON.databaseid));
             res.then((value) => {
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
             });
         }
         else if (apiMethod == "GetDatabaseCollumns") {
             var res = GetTableCollumns(parseInt(requestBodyJSON.serverid), parseInt(requestBodyJSON.databaseid), parseInt(requestBodyJSON.tableid), parseInt(requestBodyJSON.tableschemaid));
             res.then((value) => {
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
             });
         }
         else if (apiMethod == "GetCategories") {
@@ -137,8 +147,10 @@ function handleRequest(_request, _response) {
         else if (apiMethod == "GetSchemas") {
             var res = GetSchemas(parseInt(requestBodyJSON.serverid), parseInt(requestBodyJSON.databaseid));
             res.then((value) => {
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
             });
         }
         else if (apiMethod == "AddSource") {
@@ -155,15 +167,19 @@ function handleRequest(_request, _response) {
         else if (apiMethod == "VerifyTableName") {
             var res = VerifyTableName(query.useddb, query.tablename);
             res.then((value) => {
-                _response.write(value);
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(value);
+                    _response.end();
+                }
             });
         }
         else if (apiMethod == "VerifyDBName") {
             var res = VerifyDBName(parseInt(query.serverid), query.databasename);
             res.then((value) => {
-                _response.write(value);
-                _response.end();
+                if (value != undefined && value != null) {
+                    _response.write(value);
+                    _response.end();
+                }
             });
         }
         //#endregion
@@ -367,4 +383,3 @@ function FetchDataSimple(Datasource) {
         });
     });
 }
-console.log("end of programm");

@@ -101,24 +101,36 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
         else if(apiMethod == "GetDatabases"){
             var res = GetDatabases(parseInt(requestBodyJSON.serverid));
             res.then((value) =>{
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                    
+                } else {
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                }
             })
         }
 
         else if(apiMethod == "GetTables"){
             var res = GetTables(parseInt(requestBodyJSON.serverid),parseInt(requestBodyJSON.databaseid));
             res.then((value) =>{
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+
+                }
             })
         }
 
         else if(apiMethod == "GetDatabaseCollumns"){
             var res = GetTableCollumns(parseInt(requestBodyJSON.serverid),parseInt(requestBodyJSON.databaseid),parseInt(requestBodyJSON.tableid),parseInt(requestBodyJSON.tableschemaid));
             res.then((value) =>{
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                    
+                }
             })
         }
 
@@ -134,8 +146,11 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
         else if(apiMethod == "GetSchemas"){
             var res = GetSchemas(parseInt(requestBodyJSON.serverid),parseInt(requestBodyJSON.databaseid));
             res.then((value) =>{
-                _response.write(JSON.stringify(value));
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(JSON.stringify(value));
+                    _response.end();
+                    
+                }
             })
         }
 
@@ -164,16 +179,22 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
         else if(apiMethod == "VerifyTableName"){
             var res = VerifyTableName(<string>query.useddb,<string>query.tablename);
             res.then((value) =>{
-                _response.write(value);
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(value);
+                    _response.end();
+                    
+                }
             })
         }
 
         else if(apiMethod == "VerifyDBName"){
             var res = VerifyDBName(parseInt(<string>query.serverid),<string>query.databasename);
             res.then((value) =>{
-                _response.write(value);
-                _response.end();
+                if(value != undefined && value != null){
+                    _response.write(value);
+                    _response.end();
+                    
+                }
             })
         }
 
@@ -400,5 +421,3 @@ async function FetchDataSimple(Datasource: typeof Datasources[number]): Promise<
 
 
 }
-
-console.log("end of programm")

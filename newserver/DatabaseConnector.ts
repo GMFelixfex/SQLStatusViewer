@@ -53,44 +53,69 @@ export class ServerConnection {
 
     public async GetCollumnNamesFromTable(_dbname:string,_tablename: string,_tableschema:string): Promise<any>{
         var result = null;
-        try{
-            var query = "use ["+_dbname+ "] SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('["+_tableschema+"].["+_tablename+"]') "
-            await sql.connect(this.SqlConfig);
-            result = sql.query(query);
-        }
-        catch (err){
-            console.log("SQL Error: "+err)
-            return null;
-        }
+        var res = this.VerifyDBState(_dbname)
+        result = res.then(async(value)=>{
+            var state = value.recordset[0].state
+            if(state==0){
+                try{
+                    var query = "use ["+_dbname+ "] SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('["+_tableschema+"].["+_tablename+"]') "
+                    await sql.connect(this.SqlConfig);
+                    return sql.query(query);
+                }
+                catch (err){
+                    console.log("SQL Error: "+err)
+                    return null;
+                }
+            }
+            else return null
+            
+        })
         return result;
     }
     
     public async GetSchemas(_dbname: string): Promise<any>{
         var result = null;
-        try{
-            var query = "use ["+_dbname+ "] select name from sys.schemas"
-            await sql.connect(this.SqlConfig);
-            result = sql.query(query);
-        }
-        catch (err){
-            console.log("SQL Error: "+err)
-            return null;
-        }
+        var res = this.VerifyDBState(_dbname)
+        result = res.then(async(value)=>{
+            var state = value.recordset[0].state
+            if(state==0){
+                try{
+                    var query = "use ["+_dbname+ "] select name from sys.schemas"
+                    await sql.connect(this.SqlConfig);
+                    return sql.query(query);
+                }
+                catch (err){
+                    console.log("SQL Error: "+err)
+                    return null;
+                }
+            }
+            else return null
+            
+        })
+        
         return result;
     }
 
 
     public async GetTableNamesFromDB(_dbname: string): Promise<any>{
         var result = null;
-        try{
-            var query = "use ["+_dbname+ "] select name from sys.tables"
-            await sql.connect(this.SqlConfig);
-            result = sql.query(query);
-        }
-        catch (err){
-            console.log("SQL Error: "+err)
-            return null;
-        }
+        var res = this.VerifyDBState(_dbname)
+        result = res.then(async(value)=>{
+            var state = value.recordset[0].state
+            if(state==0){
+                try{
+                    var query = "use ["+_dbname+ "] select name from sys.tables"
+                    await sql.connect(this.SqlConfig);
+                    return sql.query(query);
+                    
+                }
+                catch (err){
+                    console.log("SQL Error: "+err)
+                    return null;
+                }
+            }
+            else return null
+        })
         return result;
     }
 

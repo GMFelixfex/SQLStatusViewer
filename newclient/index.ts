@@ -63,6 +63,13 @@ document.getElementById("DataSourceServers")?.addEventListener("click", function
 
 document.getElementById("DataSourceDB")?.addEventListener("change", function(){
   var selectElement = <HTMLSelectElement>document.getElementById("DataSourceDB");
+  var TableSchemaSelectElement = <HTMLSelectElement>document.getElementById("DataSourceSchemas");
+  var TableSelectElement = <HTMLSelectElement>document.getElementById("DataSourceTables");
+  TableSchemaSelectElement.value = "";
+  TableSelectElement.value = "";
+  TableSchemaSelectElement.innerHTML = "";
+  TableSelectElement.innerHTML = "";
+
   if(selectElement!=null){
     console.log(selectElement.value)
     GetTables();
@@ -72,6 +79,13 @@ document.getElementById("DataSourceDB")?.addEventListener("change", function(){
 });
 document.getElementById("DataSourceDB")?.addEventListener("click", function() {
   var selectElement = <HTMLSelectElement>document.getElementById("DataSourceDB");
+  var TableSchemaSelectElement = <HTMLSelectElement>document.getElementById("DataSourceSchemas");
+  var TableSelectElement = <HTMLSelectElement>document.getElementById("DataSourceTables");
+  TableSchemaSelectElement.value = ""
+  TableSelectElement.value = ""
+  TableSchemaSelectElement.innerHTML = "";
+  TableSelectElement.innerHTML = "";
+
   var options = selectElement?.querySelectorAll("option");
   var count = options?.length;
   if(typeof(count) === "undefined" || count < 2)
@@ -85,8 +99,10 @@ document.getElementById("DataSourceDB")?.addEventListener("click", function() {
 document.getElementById("DataSourceTables")?.addEventListener("change", function(){
   var selectElement = <HTMLSelectElement>document.getElementById("DataSourceTables");
   if(selectElement!=null){
-    console.log(selectElement.value)
-    GetTableCollumns()
+    if(selectElement.value != ""){
+      console.log(selectElement.value)
+      GetTableCollumns()
+    }
   }
 });
 document.getElementById("DataSourceTables")?.addEventListener("click", function() {
@@ -95,8 +111,10 @@ document.getElementById("DataSourceTables")?.addEventListener("click", function(
   var count = options?.length;
   if(typeof(count) === "undefined" || count < 2)
   {
-    console.log(selectElement.value)
-    GetTableCollumns()
+    if(selectElement.value != ""){
+      console.log(selectElement.value)
+      GetTableCollumns()
+    }
   }
 });
 document.getElementById("DataSourceCategories")?.addEventListener("change", function(){
@@ -187,33 +205,40 @@ function GetDatabases(){
   var ServerSelectElement = <HTMLSelectElement>document.getElementById("DataSourceServers");
   var DatabaseSelectElement = <HTMLSelectElement>document.getElementById("DataSourceDB");
   DatabaseSelectElement.disabled = false;
-  var ServersString = POSTtoServer("GetDatabases", {serverid: ServerSelectElement.value});
-
-  ServersString.then((value) =>{
-    AddToOptions(DatabaseSelectElement,value);
-  })
+  if(ServerSelectElement.value != ""){
+    var ServersString = POSTtoServer("GetDatabases", {serverid: ServerSelectElement.value});
+  
+    ServersString.then((value) =>{
+      AddToOptions(DatabaseSelectElement,value);
+    })
+  }
 }
 function GetTables(){
   var ServerSelectElement = <HTMLSelectElement>document.getElementById("DataSourceServers");
   var DatabaseSelectElement = <HTMLSelectElement>document.getElementById("DataSourceDB");
   var TableSelectElement = <HTMLSelectElement>document.getElementById("DataSourceTables");
   TableSelectElement.disabled = false;
-  var ServersString = POSTtoServer("GetTables", {serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value});
-
-  ServersString.then((value) =>{
-    AddToOptions(TableSelectElement,value);
-  })
+  if(ServerSelectElement.value != "" && DatabaseSelectElement.value  != ""){
+    var ServersString = POSTtoServer("GetTables", {serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value});
+    
+    ServersString.then((value) =>{
+      AddToOptions(TableSelectElement,value);
+    })
+  }
 }
 function GetTableSchemas(){
   var ServerSelectElement = <HTMLSelectElement>document.getElementById("DataSourceServers");
   var DatabaseSelectElement = <HTMLSelectElement>document.getElementById("DataSourceDB");
   var TableSchemaSelectElement = <HTMLSelectElement>document.getElementById("DataSourceSchemas");
   TableSchemaSelectElement.disabled = false;
-  var ServersString = POSTtoServer("GetSchemas", {serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value});
+  if(ServerSelectElement.value != "" && DatabaseSelectElement.value  != ""){
+    var ServersString = POSTtoServer("GetSchemas", {serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value});
+  
+    ServersString.then((value) =>{
+      AddToOptions(TableSchemaSelectElement,value);
+    })
+  }
 
-  ServersString.then((value) =>{
-    AddToOptions(TableSchemaSelectElement,value);
-  })
 }
 function GetSelectionConditions(){
   var ConditionSelectElement = <HTMLSelectElement>document.getElementById("DataSourceSelectionCondition");
@@ -231,26 +256,30 @@ function GetTableCollumns(){
   var StatusColumnSelectElement = <HTMLSelectElement>document.getElementById("DataSourceStatusColumn");
   StatusColumnSelectElement.disabled = false;
   var ServersString = POSTtoServer("GetDatabaseCollumns", {serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value, tableid: TableSelectElement.value, tableschemaid: TableSchemaSelectElement.value});
+  if(ServerSelectElement.value != "" && DatabaseSelectElement.value  != ""&& TableSelectElement.value  != "" && TableSchemaSelectElement.value  != ""){
+    ServersString.then((value) =>{
+      AddToOptions(StatusColumnSelectElement,value);
+      var columnFlexDiv = document.getElementById("collumnFlex");
+      var ColumnssArray = JSON.parse(value);
+      columnFlexDiv!.innerHTML = "";
+      for (let index = 0; index < ColumnssArray.length; index++) {
+        var e = document.createElement("button")
+        e.innerText = ColumnssArray[index];
+        e.setAttribute("class","columnButton");
+        e.setAttribute("id","cbut"+index);
+        e.setAttribute("value",index.toString());
+        columnFlexDiv?.appendChild(e);
+        e.addEventListener("click", function(event){
+          var targetElement = <HTMLElement>event.target;
+          if(targetElement != null) CheckButton(targetElement);
+      });
+      
+      }
+    })
+  }
 
-  ServersString.then((value) =>{
-    AddToOptions(StatusColumnSelectElement,value);
-    var columnFlexDiv = document.getElementById("collumnFlex");
-    var ColumnssArray = JSON.parse(value);
-    columnFlexDiv!.innerHTML = "";
-    for (let index = 0; index < ColumnssArray.length; index++) {
-      var e = document.createElement("button")
-      e.innerText = ColumnssArray[index];
-      e.setAttribute("class","columnButton");
-      e.setAttribute("id","cbut"+index);
-      e.setAttribute("value",index.toString());
-      columnFlexDiv?.appendChild(e);
-      e.addEventListener("click", function(event){
-        var targetElement = <HTMLElement>event.target;
-        if(targetElement != null) CheckButton(targetElement);
-    });
-    
-    }
-  })
+
+
 }
 function GetStatus(){
   var ServersString = POSTtoServer("GetStatus",{})
@@ -295,18 +324,23 @@ function AddSource(){
   for (let index = 0; index < CheckedColumns.length; index++) {
     CheckedCollumnsArray[index] = parseInt(CheckedColumns[index].value)
   }
+  if(ServerSelectElement.value != "" && DatabaseSelectElement.value  != ""&& TableSelectElement.value  != ""  &&StatusColumnSelectElement.value != "" && TableSchemaSelectElement.value  != "" && CheckedCollumnsArray.length != 0 && SelectionConditionSelectElement.value != ""&& CategoriesSelectElement.value != "" && TitleInputElement.value != ""){
+    var ErrorDiv = document.getElementById("ErrorAddDiv");
+    ErrorDiv!.innerHTML = "";
+    POSTtoServer("AddSource",{
+      serverid: ServerSelectElement.value,
+      databaseid: DatabaseSelectElement.value,
+      tableid: TableSelectElement.value,
+      statuscollumnid: StatusColumnSelectElement.value,
+      tableschemaid: TableSchemaSelectElement.value,
+      visibleCollumnNumbers: CheckedCollumnsArray,
+      selectConditionid: SelectionConditionSelectElement.value,
+      categoryid: CategoriesSelectElement.value,
+      DisplayTitle: TitleInputElement.value
+    });
+  }
 
-  POSTtoServer("AddSource",{
-    serverid: ServerSelectElement.value,
-    databaseid: DatabaseSelectElement.value,
-    tableid: TableSelectElement.value,
-    statuscollumnid: StatusColumnSelectElement.value,
-    tableschemaid: TableSchemaSelectElement.value,
-    visibleCollumnNumbers: CheckedCollumnsArray,
-    selectConditionid: SelectionConditionSelectElement.value,
-    categoryid: CategoriesSelectElement.value,
-    DisplayTitle: TitleInputElement.value
-  });
+  
 }
 function ResetInput(){
   var ServerSelectElement = <HTMLSelectElement>document.getElementById("DataSourceServers");
@@ -333,7 +367,8 @@ function ResetInput(){
   SelectionConditionSelectElement.disabled = true;
   CategoriesSelectElement.disabled = true;
   StatusColumnSelectElement.disabled =  true;
-
+  var ErrorDiv = document.getElementById("ErrorAddDiv");
+  ErrorDiv!.innerHTML = "Missing Input";
 
   GetServers();
   GetCategories();

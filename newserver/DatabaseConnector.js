@@ -62,45 +62,69 @@ class ServerConnection {
     GetCollumnNamesFromTable(_dbname, _tablename, _tableschema) {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
-            try {
-                var query = "use [" + _dbname + "] SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('[" + _tableschema + "].[" + _tablename + "]') ";
-                yield msnodesqlv8_1.default.connect(this.SqlConfig);
-                result = msnodesqlv8_1.default.query(query);
-            }
-            catch (err) {
-                console.log("SQL Error: " + err);
-                return null;
-            }
+            var res = this.VerifyDBState(_dbname);
+            result = res.then((value) => __awaiter(this, void 0, void 0, function* () {
+                var state = value.recordset[0].state;
+                if (state == 0) {
+                    try {
+                        var query = "use [" + _dbname + "] SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('[" + _tableschema + "].[" + _tablename + "]') ";
+                        yield msnodesqlv8_1.default.connect(this.SqlConfig);
+                        return msnodesqlv8_1.default.query(query);
+                    }
+                    catch (err) {
+                        console.log("SQL Error: " + err);
+                        return null;
+                    }
+                }
+                else
+                    return null;
+            }));
             return result;
         });
     }
     GetSchemas(_dbname) {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
-            try {
-                var query = "use [" + _dbname + "] select name from sys.schemas";
-                yield msnodesqlv8_1.default.connect(this.SqlConfig);
-                result = msnodesqlv8_1.default.query(query);
-            }
-            catch (err) {
-                console.log("SQL Error: " + err);
-                return null;
-            }
+            var res = this.VerifyDBState(_dbname);
+            result = res.then((value) => __awaiter(this, void 0, void 0, function* () {
+                var state = value.recordset[0].state;
+                if (state == 0) {
+                    try {
+                        var query = "use [" + _dbname + "] select name from sys.schemas";
+                        yield msnodesqlv8_1.default.connect(this.SqlConfig);
+                        return msnodesqlv8_1.default.query(query);
+                    }
+                    catch (err) {
+                        console.log("SQL Error: " + err);
+                        return null;
+                    }
+                }
+                else
+                    return null;
+            }));
             return result;
         });
     }
     GetTableNamesFromDB(_dbname) {
         return __awaiter(this, void 0, void 0, function* () {
             var result = null;
-            try {
-                var query = "use [" + _dbname + "] select name from sys.tables";
-                yield msnodesqlv8_1.default.connect(this.SqlConfig);
-                result = msnodesqlv8_1.default.query(query);
-            }
-            catch (err) {
-                console.log("SQL Error: " + err);
-                return null;
-            }
+            var res = this.VerifyDBState(_dbname);
+            result = res.then((value) => __awaiter(this, void 0, void 0, function* () {
+                var state = value.recordset[0].state;
+                if (state == 0) {
+                    try {
+                        var query = "use [" + _dbname + "] select name from sys.tables";
+                        yield msnodesqlv8_1.default.connect(this.SqlConfig);
+                        return msnodesqlv8_1.default.query(query);
+                    }
+                    catch (err) {
+                        console.log("SQL Error: " + err);
+                        return null;
+                    }
+                }
+                else
+                    return null;
+            }));
             return result;
         });
     }
