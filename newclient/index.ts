@@ -1,4 +1,6 @@
 var currentHost: string = "http://"+window.location.hostname+":"+8100+"/";
+// var currentHost: string = "http://localhost:8100/";
+
 var MaxTimeSinceUpdateInMin = 15;
 var utcOffsets: { label: string, value: number }[] = [];
 
