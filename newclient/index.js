@@ -11,7 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var _a, _b, _c, _d, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
 var currentHost = "http://" + window.location.hostname + ":" + 8100 + "/";
 var MaxTimeSinceUpdateInMin = 15;
+var utcOffsets = [];
 document.getElementById("InputTimeForUpdate").value = "15";
+StartSetupUTCTime();
+ResetUTCLabel();
 GetServers();
 GetCategories();
 GetStatus();
@@ -303,6 +306,7 @@ function AddSource() {
     var CategoriesSelectElement = document.getElementById("DataSourceCategories");
     var TitleInputElement = document.getElementById("DatasourceDisplayTitle");
     var CheckedColumns = document.getElementsByClassName("cbutChecked");
+    var UTCTime = document.getElementById("DataSourceUTCTime");
     var CheckedCollumnsArray = [];
     for (let index = 0; index < CheckedColumns.length; index++) {
         CheckedCollumnsArray[index] = parseInt(CheckedColumns[index].value);
@@ -319,7 +323,8 @@ function AddSource() {
             visibleCollumnNumbers: CheckedCollumnsArray,
             selectConditionid: SelectionConditionSelectElement.value,
             categoryid: CategoriesSelectElement.value,
-            DisplayTitle: TitleInputElement.value
+            DisplayTitle: TitleInputElement.value,
+            UTCTimeOffset: UTCTime.value
         });
     }
 }
@@ -350,6 +355,7 @@ function ResetInput() {
     StatusColumnSelectElement.disabled = true;
     var ErrorDiv = document.getElementById("ErrorAddDiv");
     ErrorDiv.innerHTML = "Missing Input";
+    ResetUTCLabel();
     GetServers();
     GetCategories();
     GetStatus();
@@ -471,7 +477,7 @@ function DisplayAs(_currentobject, _displaytype, _method, _gridbox, _listbox) {
             lastdate = "";
         else
             lastdate = _currentobject.Data[_currentobject.Data.length - 1][_currentobject.SourceObject.StatusColumn];
-        var formattedDate = FormatDateTime(lastdate);
+        var formattedDate = FormatDateTime(lastdate, _currentobject.SourceObject.UTCTimeOffset);
         console.log(formattedDate);
         if (_displaytype == "Grid") {
             var e = document.createElement("div");
@@ -480,8 +486,8 @@ function DisplayAs(_currentobject, _displaytype, _method, _gridbox, _listbox) {
             else
                 e.setAttribute("class", "d-flex align-items-center rounded-2 p-3 Statusdiv");
             if (formattedDate != null) {
-                e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate) + ";'></div>";
-                e.innerHTML += "<div class='ms-3 statustext'><h3 class='fs-5 mb-1 testingwithstyle'>" + _currentobject.SourceObject.DisplayTitle + "</h3><p class='mb-0 Statuspara'>Statuschecked: " + formattedDate + "</p></div>";
+                e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate.formattedDate) + ";'></div>";
+                e.innerHTML += "<div class='ms-3 statustext'><h3 class='fs-5 mb-1 testingwithstyle'>" + _currentobject.SourceObject.DisplayTitle + "</h3><p class='mb-0 Statuspara'>Last-Check: " + formattedDate.formattedDate + "</p><p class='mb-0 Statuspara'>Original: " + formattedDate.originalDate + "</p></div>";
             }
             else {
                 e.innerHTML += "<div class='ms-3 statustext'><h3 class='fs-5 mb-1 testingwithstyle'>" + _currentobject.SourceObject.DisplayTitle + "</h3></div>";
@@ -498,8 +504,8 @@ function DisplayAs(_currentobject, _displaytype, _method, _gridbox, _listbox) {
             else
                 e.setAttribute("class", "d-flex align-items-center rounded-2 p-2 Statusdiv2");
             if (formattedDate != null) {
-                e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate) + ";'></div>";
-                e.innerHTML += "<h3 class='fs-5 mb-0 ms-3'>" + _currentobject.SourceObject.DisplayTitle + "</h3><h3 class='mb-0 ms-3 mt-1 fs-6 '>Statuschecked: " + formattedDate + "</h3>";
+                e.innerHTML = "<div class='Status' style='background-color: " + GetBackgroundColor(formattedDate.formattedDate) + ";'></div>";
+                e.innerHTML += "<h3 class='fs-5 mb-0 ms-3'>" + _currentobject.SourceObject.DisplayTitle + "</h3><h3 class='mb-0 ms-3 mt-1 fs-6 '>Last-Check: " + formattedDate.formattedDate + "</h3>" + "<h3 class='mb-0 ms-3 mt-1 fs-6 '>Original: " + formattedDate.originalDate + "</h3>";
             }
             else {
                 e.innerHTML += "<h3 class='fs-5 mb-0 ms-3'>" + _currentobject.SourceObject.DisplayTitle + "</h3>";
@@ -603,13 +609,31 @@ var sortbyprop = function (prop, arr) {
     });
     return arr;
 };
-function FormatDateTime(_dateTime) {
+function FormatDateTime(_dateTime, _dateFormat) {
+    console.log(_dateFormat);
+    console.log(utcOffsets);
     if (!Number.isNaN(Date.parse(_dateTime))) {
-        let newdate = new Date(Date.parse(_dateTime));
+        let originalDate = new Date(Date.parse(_dateTime));
+        let newdate = new Date(originalDate.getTime());
+        for (let i = 0; i < utcOffsets.length; i++) {
+            if (utcOffsets[i].label == _dateFormat) {
+                newdate = new Date(newdate.getTime() - utcOffsets[i].value * 60 * 60 * 1000);
+            }
+        }
+        var visualOffset = GetUTCOffset();
+        newdate = new Date(newdate.getTime() + visualOffset * 60 * 60 * 1000);
         let formattedDate = "";
         formattedDate = newdate.toISOString();
         formattedDate = formattedDate.replace("T", " ").replace("Z", "");
-        return formattedDate;
+        formattedDate = formattedDate.slice(0, formattedDate.length - 4);
+        let formattedOriginalDate = "";
+        formattedOriginalDate = originalDate.toISOString();
+        formattedOriginalDate = formattedOriginalDate.replace("T", " ").replace("Z", "");
+        formattedOriginalDate = formattedOriginalDate.slice(0, formattedOriginalDate.length - 4);
+        return {
+            formattedDate: formattedDate,
+            originalDate: formattedOriginalDate
+        };
     }
     else {
         return null;
@@ -762,5 +786,57 @@ function POSTtoServer(_method, _parameters) {
         let message = yield response.text();
         return message;
     });
+}
+//#endregion
+//#region Time
+function StartSetupUTCTime() {
+    // Create a list with all timezones
+    var timezones = [];
+    for (var i = -12; i <= 14; i++) {
+        timezones.push(i);
+    }
+    // Create a list with all utc offsets with a label
+    utcOffsets = timezones.map(function (tz) {
+        return {
+            label: 'UTC ' + (tz > 0 ? '+' : '') + tz,
+            value: tz
+        };
+    });
+    // Add all utc offsets to the select box
+    var UTCSelectBox = document.getElementById("UTCSelect");
+    UTCSelectBox.innerHTML = "";
+    for (var i = 0; i < utcOffsets.length; i++) {
+        var option = document.createElement("option");
+        option.value = utcOffsets[i].value.toString();
+        option.text = utcOffsets[i].label;
+        if (utcOffsets[i].value == 0) {
+            option.selected = true;
+        }
+        UTCSelectBox.add(option);
+    }
+    UTCSelectBox.addEventListener("change", function () {
+        var selectElement = document.getElementById("UTCSelect");
+        if (selectElement != null) {
+            console.log(selectElement.value);
+            GenerateStatus();
+        }
+    });
+}
+function GetUTCOffset() {
+    var selectElement = document.getElementById("UTCSelect");
+    if (selectElement != null) {
+        return parseInt(selectElement.value);
+    }
+    return 0;
+}
+function ResetUTCLabel() {
+    var DataSourceUTCSelectBox = document.getElementById("DataSourceUTCTime");
+    DataSourceUTCSelectBox.innerHTML = "";
+    for (var i = 0; i < utcOffsets.length; i++) {
+        var option = document.createElement("option");
+        option.value = utcOffsets[i].label;
+        option.text = utcOffsets[i].label;
+        DataSourceUTCSelectBox.add(option);
+    }
 }
 //#endregion

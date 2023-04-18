@@ -154,7 +154,7 @@ function handleRequest(_request, _response) {
             });
         }
         else if (apiMethod == "AddSource") {
-            AddSource(parseInt(requestBodyJSON.serverid), parseInt(requestBodyJSON.databaseid), parseInt(requestBodyJSON.tableid), parseInt(requestBodyJSON.tableschemaid), parseInt(requestBodyJSON.statuscollumnid), requestBodyJSON.visibleCollumnNumbers, parseInt(requestBodyJSON.selectConditionid), parseInt(requestBodyJSON.categoryid), requestBodyJSON.DisplayTitle);
+            AddSource(parseInt(requestBodyJSON.serverid), parseInt(requestBodyJSON.databaseid), parseInt(requestBodyJSON.tableid), parseInt(requestBodyJSON.tableschemaid), parseInt(requestBodyJSON.statuscollumnid), requestBodyJSON.visibleCollumnNumbers, parseInt(requestBodyJSON.selectConditionid), parseInt(requestBodyJSON.categoryid), requestBodyJSON.DisplayTitle, requestBodyJSON.UTCTimeOffset);
             sendString = "";
             _response.write(sendString);
             _response.end();
@@ -186,7 +186,7 @@ function handleRequest(_request, _response) {
     });
 }
 //adding another Source form the userinput
-function AddSource(_servernumber, _dbnumber, _tablenumber, _tableschemanumber, _statuscollumnnumber, _visibleCollumnsArray, _selectionConditionNumber, _categoryNumber, _displayTitle) {
+function AddSource(_servernumber, _dbnumber, _tablenumber, _tableschemanumber, _statuscollumnnumber, _visibleCollumnsArray, _selectionConditionNumber, _categoryNumber, _displayTitle, _UTCTimeOffset) {
     return __awaiter(this, void 0, void 0, function* () {
         var text = fs.readFileSync("../SQLStatusViewer/Config/Datasources.json", "utf8");
         Datasources = JSON.parse(text);
@@ -213,6 +213,7 @@ function AddSource(_servernumber, _dbnumber, _tablenumber, _tableschemanumber, _
             "TableName": table,
             "TableSchema": schema,
             "SelectCondition": condition,
+            "UTCTimeOffset": _UTCTimeOffset,
             "Category": DataCategories_json_1.default[_categoryNumber],
             "StatusColumn": collumns[_statuscollumnnumber],
             "Columns": visibleCollumnNames

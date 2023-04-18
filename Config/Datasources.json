@@ -7,6 +7,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT MAX(ID) from [testing2].[dbo].[MOCK_DATA])",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -22,6 +23,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT MAX(ID) from [testing1].[dbo].[MOCK_DATA])",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -37,6 +39,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT MIN(ID) from [testing2].[dbo].[MOCK_DATA])",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -52,6 +55,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID <= 10",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -67,6 +71,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT MIN(ID) from [testing1].[dbo].[MOCK_DATA])",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -82,6 +87,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID >= 990",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -97,6 +103,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT Min(ID) from testing1.dbo.MOCK_DATA )",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -112,6 +119,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID = (SELECT MAX(ID) from testing1.dbo.MOCK_DATA )",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -127,6 +135,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE ID >= 990",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -142,6 +151,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE datetime = (SELECT Min(datetime) from testing1.dbo.MOCK_DATA )",
 		"Category": "Last Update",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -159,6 +169,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE datetime = (SELECT MAX( datetime ) from testing1.dbo.MOCK_DATA )",
 		"Category": "Last Update",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -175,6 +186,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE datetime = (SELECT MAX( datetime ) from testing1.dbo.MOCK_DATA )",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -192,6 +204,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE [datetime] = (SELECT MAX( [datetime] ) from [wowsertesting_p4-Mag32].[dbo].[MOCK_DATA] )",
 		"Category": "Last Import",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",
@@ -208,6 +221,7 @@
 		"TableSchema": "dbo",
 		"SelectCondition": "WHERE [datetime] = (SELECT MAX( [datetime] ) from [wowsertesting_p4-Mag32].[dbo].[MOCK_DATA] )",
 		"Category": "Last Lookup",
+		"UTCTimeOffset": "UTC +1",
 		"StatusColumn": "datetime",
 		"Columns": [
 			"id",

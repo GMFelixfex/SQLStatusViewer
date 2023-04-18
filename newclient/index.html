@@ -71,8 +71,15 @@
         </select>
     </li>
     <li id="UpdateTimeLine">
-      <i class="uil-clock fa-fw"> Time(min):</i> 
+      <i class="uil-clock fa-fw"> Max Time Offset (min):</i> 
       <input id="InputTimeForUpdate" type="number">
+    </li>
+    <li id="UpdateUTCLine">
+      <i class="uil-clock fa-fw"> Display UTC time:</i> 
+      <select id="UTCSelect" name="UTCSelect">
+        <option value="Grid">Grid</option>
+        <option value="List">List</option>
+      </select>
     </li>
 </aside>
 
@@ -165,6 +172,10 @@
       </select>
       <label for="DataSourceCategories">Categories:</label>
       <select id="DataSourceCategories" name="DataSourceCategories">
+      
+      </select>
+      <label for="DataSourceUTCTime">Local UTC Time:</label>
+      <select id="DataSourceUTCTime" name="DataSourceUTCTime">
 
       </select>
       <label for="DataSourceSelectionCondition">Condition:</label>

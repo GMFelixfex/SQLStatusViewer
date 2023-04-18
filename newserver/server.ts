@@ -6,7 +6,6 @@ import ServerConfig from '../ServerConfig.json'
 import SelectionConditions from '../Config/SelectionConditions.json'
 import DataCategories from '../Config/DataCategories.json'
 import * as URL from 'url'
-import { Console } from 'console'
 
 
 // Sets Port if it was not already set
@@ -164,7 +163,8 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
                 requestBodyJSON.visibleCollumnNumbers,
                 parseInt(requestBodyJSON.selectConditionid),
                 parseInt(requestBodyJSON.categoryid),
-                requestBodyJSON.DisplayTitle);
+                requestBodyJSON.DisplayTitle,
+                requestBodyJSON.UTCTimeOffset);
             sendString = ""
             _response.write(sendString);
             _response.end();
@@ -205,7 +205,7 @@ function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerRes
 }
 
 //adding another Source form the userinput
-async function AddSource(_servernumber:number, _dbnumber:number, _tablenumber:number, _tableschemanumber:number, _statuscollumnnumber:number ,_visibleCollumnsArray:number[], _selectionConditionNumber:number, _categoryNumber: number, _displayTitle:string) {
+async function AddSource(_servernumber:number, _dbnumber:number, _tablenumber:number, _tableschemanumber:number, _statuscollumnnumber:number ,_visibleCollumnsArray:number[], _selectionConditionNumber:number, _categoryNumber: number, _displayTitle:string, _UTCTimeOffset:string) {
     var text = fs.readFileSync("../SQLStatusViewer/Config/Datasources.json", "utf8");
     Datasources = JSON.parse(text);
         
@@ -232,6 +232,7 @@ async function AddSource(_servernumber:number, _dbnumber:number, _tablenumber:nu
                     "TableName": table,
                     "TableSchema": schema,
                     "SelectCondition": condition,
+                    "UTCTimeOffset": _UTCTimeOffset,
                     "Category": DataCategories[_categoryNumber],
                     "StatusColumn": collumns[_statuscollumnnumber],
                     "Columns": visibleCollumnNames
