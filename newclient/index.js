@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a, _b, _c, _d, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
 var currentHost = "http://" + window.location.hostname + ":" + 8100 + "/";
+var currentHost = "http://localhost:8100/";
 var MaxTimeSinceUpdateInMin = 15;
 var utcOffsets = [];
 document.getElementById("InputTimeForUpdate").value = "15";
@@ -52,6 +53,19 @@ var currentSearchTerm = "";
 });
 (_f = document.getElementById("DataSourceServers")) === null || _f === void 0 ? void 0 : _f.addEventListener("change", function () {
     var selectElement = document.getElementById("DataSourceServers");
+    var DatabaseSelectElement = document.getElementById("DataSourceDB");
+    var TableSchemaSelectElement = document.getElementById("DataSourceSchemas");
+    var TableSelectElement = document.getElementById("DataSourceTables");
+    var columnFlexDiv = document.getElementById("collumnFlex");
+    var StatusColumnSelectElement = document.getElementById("DataSourceStatusColumn");
+    DatabaseSelectElement.value = "";
+    TableSchemaSelectElement.value = "";
+    TableSelectElement.value = "";
+    StatusColumnSelectElement.value = "";
+    columnFlexDiv.innerHTML = "";
+    TableSchemaSelectElement.disabled = true;
+    TableSelectElement.disabled = true;
+    StatusColumnSelectElement.disabled = true;
     if (selectElement != null) {
         console.log(selectElement.value);
         if (selectElement.value != "") {
@@ -61,6 +75,19 @@ var currentSearchTerm = "";
 });
 (_g = document.getElementById("DataSourceServers")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", function () {
     var selectElement = document.getElementById("DataSourceServers");
+    var DatabaseSelectElement = document.getElementById("DataSourceDB");
+    var TableSchemaSelectElement = document.getElementById("DataSourceSchemas");
+    var TableSelectElement = document.getElementById("DataSourceTables");
+    var columnFlexDiv = document.getElementById("collumnFlex");
+    var StatusColumnSelectElement = document.getElementById("DataSourceStatusColumn");
+    DatabaseSelectElement.value = "";
+    TableSchemaSelectElement.value = "";
+    TableSelectElement.value = "";
+    StatusColumnSelectElement.value = "";
+    columnFlexDiv.innerHTML = "";
+    TableSchemaSelectElement.disabled = true;
+    TableSelectElement.disabled = true;
+    StatusColumnSelectElement.disabled = true;
     var options = selectElement === null || selectElement === void 0 ? void 0 : selectElement.querySelectorAll("option");
     var count = options === null || options === void 0 ? void 0 : options.length;
     if (typeof (count) === "undefined" || count < 2) {
@@ -104,7 +131,6 @@ var currentSearchTerm = "";
     var selectElement = document.getElementById("DataSourceTables");
     if (selectElement != null) {
         if (selectElement.value != "") {
-            console.log(selectElement.value);
             GetTableCollumns();
         }
     }
@@ -115,7 +141,6 @@ var currentSearchTerm = "";
     var count = options === null || options === void 0 ? void 0 : options.length;
     if (typeof (count) === "undefined" || count < 2) {
         if (selectElement.value != "") {
-            console.log(selectElement.value);
             GetTableCollumns();
         }
     }
@@ -180,16 +205,16 @@ var currentSearchTerm = "";
 //#region Get-Funktions
 function GetServers() {
     var ServerSelectElement = document.getElementById("DataSourceServers");
-    ServerSelectElement.disabled = false;
     var ServersString = POSTtoServer("GetServers", {});
+    ServerSelectElement.disabled = true;
     ServersString.then((value) => {
         AddToOptions(ServerSelectElement, value);
     });
 }
 function GetCategories() {
     var CategoriesSelectElement = document.getElementById("DataSourceCategories");
-    CategoriesSelectElement.disabled = false;
     var ServersString = POSTtoServer("GetCategories", {});
+    CategoriesSelectElement.disabled = true;
     ServersString.then((value) => {
         AddToOptions(CategoriesSelectElement, value);
     });
@@ -197,7 +222,6 @@ function GetCategories() {
 function GetDatabases() {
     var ServerSelectElement = document.getElementById("DataSourceServers");
     var DatabaseSelectElement = document.getElementById("DataSourceDB");
-    DatabaseSelectElement.disabled = false;
     if (ServerSelectElement.value != "") {
         var ServersString = POSTtoServer("GetDatabases", { serverid: ServerSelectElement.value });
         ServersString.then((value) => {
@@ -209,9 +233,10 @@ function GetTables() {
     var ServerSelectElement = document.getElementById("DataSourceServers");
     var DatabaseSelectElement = document.getElementById("DataSourceDB");
     var TableSelectElement = document.getElementById("DataSourceTables");
-    TableSelectElement.disabled = false;
+    TableSelectElement.disabled = true;
     if (ServerSelectElement.value != "" && DatabaseSelectElement.value != "") {
         var ServersString = POSTtoServer("GetTables", { serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value });
+        console.log(ServersString);
         ServersString.then((value) => {
             AddToOptions(TableSelectElement, value);
         });
@@ -221,7 +246,7 @@ function GetTableSchemas() {
     var ServerSelectElement = document.getElementById("DataSourceServers");
     var DatabaseSelectElement = document.getElementById("DataSourceDB");
     var TableSchemaSelectElement = document.getElementById("DataSourceSchemas");
-    TableSchemaSelectElement.disabled = false;
+    TableSchemaSelectElement.disabled = true;
     if (ServerSelectElement.value != "" && DatabaseSelectElement.value != "") {
         var ServersString = POSTtoServer("GetSchemas", { serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value });
         ServersString.then((value) => {
@@ -232,7 +257,6 @@ function GetTableSchemas() {
 function GetSelectionConditions() {
     var ConditionSelectElement = document.getElementById("DataSourceSelectionCondition");
     var ServersString = POSTtoServer("GetSelectionConditions", {});
-    ConditionSelectElement.disabled = false;
     ServersString.then((value) => {
         AddToOptions(ConditionSelectElement, value);
     });
@@ -243,7 +267,7 @@ function GetTableCollumns() {
     var TableSchemaSelectElement = document.getElementById("DataSourceSchemas");
     var TableSelectElement = document.getElementById("DataSourceTables");
     var StatusColumnSelectElement = document.getElementById("DataSourceStatusColumn");
-    StatusColumnSelectElement.disabled = false;
+    StatusColumnSelectElement.disabled = true;
     var ServersString = POSTtoServer("GetDatabaseCollumns", { serverid: ServerSelectElement.value, databaseid: DatabaseSelectElement.value, tableid: TableSelectElement.value, tableschemaid: TableSchemaSelectElement.value });
     if (ServerSelectElement.value != "" && DatabaseSelectElement.value != "" && TableSelectElement.value != "" && TableSchemaSelectElement.value != "") {
         ServersString.then((value) => {
@@ -289,6 +313,7 @@ function CheckButton(_e) {
 function AddToOptions(_selectElement, _OptionsString) {
     var OptionsArray = JSON.parse(_OptionsString);
     _selectElement.innerHTML = "";
+    _selectElement.disabled = false;
     for (let index = 0; index < OptionsArray.length; index++) {
         var e = document.createElement("option");
         e.text = OptionsArray[index];
@@ -530,6 +555,8 @@ function DisplayDetailedStats(_currentobject) {
         div.setAttribute("id", "DisplayTableDiv");
         div.appendChild(titleElement);
         div.appendChild(buttondisplay);
+        var div2 = document.createElement("div");
+        div2.setAttribute("id", "DisplayTableDiv2");
         var e = document.createElement("table");
         CreateDisplayTable(_currentobject, e, true);
         var xbutton = document.createElement("button");
@@ -553,7 +580,8 @@ function DisplayDetailedStats(_currentobject) {
             }
         });
         buttondisplay.appendChild(sortbutton);
-        div.appendChild(e);
+        div2.appendChild(e);
+        div.appendChild(div2);
         DisplaySection.appendChild(div);
     }
 }
